@@ -19,8 +19,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/student")
 public class StudentController {
-    @PostMapping("add")
-    public void addStudent(@RequestBody Student student) {
-        System.out.println(student);
-    }
+
 }
