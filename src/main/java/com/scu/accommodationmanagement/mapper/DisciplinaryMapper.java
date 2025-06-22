@@ -2,6 +2,7 @@ package com.scu.accommodationmanagement.mapper;
 
 import com.scu.accommodationmanagement.model.po.Disciplinary;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
@@ -11,6 +12,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author author
  * @since 2025-06-22
  */
+@Mapper
 public interface DisciplinaryMapper extends BaseMapper<Disciplinary> {
 
 }
