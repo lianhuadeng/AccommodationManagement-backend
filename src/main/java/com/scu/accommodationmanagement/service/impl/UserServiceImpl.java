@@ -4,6 +4,7 @@ import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.mapper.UserMapper;
 import com.scu.accommodationmanagement.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,5 +17,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
+    @Autowired
+    private UserMapper userMapper;
 
+    @Override
+    public void addStudent(User user) {
+        userMapper.insert(user);
+    }
 }

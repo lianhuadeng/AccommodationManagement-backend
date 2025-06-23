@@ -35,5 +35,10 @@ public class Building implements Serializable {
      */
     private Long parkId;
 
+    /**
+     * 宿管工号
+     */
+    private Long dormitoryId;
+
 
 }

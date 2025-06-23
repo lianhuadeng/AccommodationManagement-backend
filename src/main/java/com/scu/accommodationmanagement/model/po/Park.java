@@ -31,11 +31,6 @@ public class Park implements Serializable {
     private Long parkId;
 
     /**
-     * 宿舍管理员工号
-     */
-    private Long dormitoryId;
-
-    /**
      * 园区名
      */
     private String name;
