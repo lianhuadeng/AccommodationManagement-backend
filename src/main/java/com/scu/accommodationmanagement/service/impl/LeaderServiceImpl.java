@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
  * 分管领导 服务实现类
  * </p>
  *
- * @author author
- * @since 2025-06-22
+ * @author scu
+ * @since 2025-06-23
  */
 @Service
 public class LeaderServiceImpl extends ServiceImpl<LeaderMapper, Leader> implements ILeaderService {

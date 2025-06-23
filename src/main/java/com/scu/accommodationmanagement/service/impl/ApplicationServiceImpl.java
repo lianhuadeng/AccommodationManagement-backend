@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
  * 住宿调整申请 服务实现类
  * </p>
  *
- * @author author
- * @since 2025-06-22
+ * @author scu
+ * @since 2025-06-23
  */
 @Service
 public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Application> implements IApplicationService {

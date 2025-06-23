@@ -8,8 +8,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * 卫生检查 服务类
  * </p>
  *
- * @author author
- * @since 2025-06-22
+ * @author scu
+ * @since 2025-06-23
  */
 public interface IHygieneCheckService extends IService<HygieneCheck> {
 

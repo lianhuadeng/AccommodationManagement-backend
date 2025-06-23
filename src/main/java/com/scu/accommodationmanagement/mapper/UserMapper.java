@@ -1,16 +1,16 @@
 package com.scu.accommodationmanagement.mapper;
 
-import com.scu.accommodationmanagement.model.po.Disciplinary;
+import com.scu.accommodationmanagement.model.po.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
  * <p>
- * 违纪记录 Mapper 接口
+ * 用户信息 Mapper 接口
  * </p>
  *
  * @author scu
  * @since 2025-06-23
  */
-public interface DisciplinaryMapper extends BaseMapper<Disciplinary> {
+public interface UserMapper extends BaseMapper<User> {
 
 }

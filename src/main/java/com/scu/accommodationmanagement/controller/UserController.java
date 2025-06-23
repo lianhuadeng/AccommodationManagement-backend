@@ -7,14 +7,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- * 系统管理员 前端控制器
+ * 用户信息 前端控制器
  * </p>
  *
- * @author author
- * @since 2025-06-22
+ * @author scu
+ * @since 2025-06-23
  */
 @RestController
-@RequestMapping("/system-admin")
-public class SystemAdminController {
+@RequestMapping("/user")
+public class UserController {
 
 }

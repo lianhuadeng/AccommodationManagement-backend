@@ -1,6 +1,5 @@
 package com.scu.accommodationmanagement.model.po;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.time.LocalDateTime;
@@ -15,8 +14,8 @@ import lombok.experimental.Accessors;
  * 卫生检查
  * </p>
  *
- * @author author
- * @since 2025-06-22
+ * @author scu
+ * @since 2025-06-23
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -29,31 +28,27 @@ public class HygieneCheck implements Serializable {
     /**
      * 卫生检查id
      */
-    @TableId(value = "hygiene_id", type = IdType.AUTO)
+    @TableId(value = "hygiene_id", type = IdType.NONE)
     private Long hygieneId;
 
     /**
      * 宿舍管理员工号
      */
-    @TableField("dormitory_id")
     private Long dormitoryId;
 
     /**
      * 房间号
      */
-    @TableField("room_id")
     private Long roomId;
 
     /**
      * 分数
      */
-    @TableField("score")
     private Long score;
 
     /**
      * 检查时间
      */
-    @TableField("check_time")
     private LocalDateTime checkTime;
 
 

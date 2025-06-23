@@ -8,8 +8,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * 住宿调整申请 服务类
  * </p>
  *
- * @author author
- * @since 2025-06-22
+ * @author scu
+ * @since 2025-06-23
  */
 public interface IApplicationService extends IService<Application> {
 

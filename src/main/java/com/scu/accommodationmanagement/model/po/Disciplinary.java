@@ -1,6 +1,5 @@
 package com.scu.accommodationmanagement.model.po;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -14,8 +13,8 @@ import lombok.experimental.Accessors;
  * 违纪记录
  * </p>
  *
- * @author author
- * @since 2025-06-22
+ * @author scu
+ * @since 2025-06-23
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -28,37 +27,32 @@ public class Disciplinary implements Serializable {
     /**
      * 违纪id
      */
-    @TableId(value = "disciplinary_id", type = IdType.AUTO)
+    @TableId(value = "disciplinary_id", type = IdType.NONE)
     private Long disciplinaryId;
 
     /**
      * 扣分领导id
      */
-    @TableField("leader_id")
     private Long leaderId;
 
     /**
      * 学号
      */
-    @TableField("student_id")
     private Long studentId;
 
     /**
      * 宿舍管理员id
      */
-    @TableField("dormitory_id")
     private Long dormitoryId;
 
     /**
      * 违纪原因
      */
-    @TableField("reason")
     private String reason;
 
     /**
      * 处罚分数
      */
-    @TableField("score")
     private Long score;
 
 

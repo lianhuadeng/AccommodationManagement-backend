@@ -1,6 +1,5 @@
 package com.scu.accommodationmanagement.model.po;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -11,49 +10,65 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 宿舍管理员
+ * 用户信息
  * </p>
  *
- * @author author
- * @since 2025-06-22
+ * @author scu
+ * @since 2025-06-23
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("dormitory_admin")
-public class DormitoryAdmin implements Serializable {
+@TableName("user")
+public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 宿舍管理员工号
+     * 学号/工号
      */
-    @TableId(value = "dormitory_id", type = IdType.AUTO)
-    private Long dormitoryId;
-
-    /**
-     * 园区id
-     */
-    @TableField("park_id")
-    private Long parkId;
-
-    /**
-     * 密码
-     */
-    @TableField("password")
-    private String password;
+    @TableId(value = "user_id", type = IdType.NONE)
+    private Long userId;
 
     /**
      * 姓名
      */
-    @TableField("name")
     private String name;
+
+    /**
+     * 密码
+     */
+    private String password;
+
+    /**
+     * 学院
+     */
+    private String college;
+
+    /**
+     * 专业
+     */
+    private String major;
+
+    /**
+     * 年级
+     */
+    private Long grade;
+
+    /**
+     * 班级
+     */
+    private Long clazz;
 
     /**
      * 联系方式
      */
-    @TableField("contact")
     private String contact;
+
+    /**
+     * 用户类型
+     */
+    private String type;
 
 
 }

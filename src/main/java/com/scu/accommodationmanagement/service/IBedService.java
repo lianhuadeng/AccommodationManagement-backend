@@ -8,8 +8,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * 床位 服务类
  * </p>
  *
- * @author author
- * @since 2025-06-22
+ * @author scu
+ * @since 2025-06-23
  */
 public interface IBedService extends IService<Bed> {
 

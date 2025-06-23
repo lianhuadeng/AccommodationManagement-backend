@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
  * 楼栋 服务实现类
  * </p>
  *
- * @author author
- * @since 2025-06-22
+ * @author scu
+ * @since 2025-06-23
  */
 @Service
 public class BuildingServiceImpl extends ServiceImpl<BuildingMapper, Building> implements IBuildingService {

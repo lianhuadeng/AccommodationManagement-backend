@@ -1,6 +1,5 @@
 package com.scu.accommodationmanagement.model.po;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -14,8 +13,8 @@ import lombok.experimental.Accessors;
  * 床位
  * </p>
  *
- * @author author
- * @since 2025-06-22
+ * @author scu
+ * @since 2025-06-23
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -28,19 +27,17 @@ public class Bed implements Serializable {
     /**
      * 床位号
      */
-    @TableId(value = "bed_id", type = IdType.AUTO)
+    @TableId(value = "bed_id", type = IdType.NONE)
     private Long bedId;
 
     /**
      * 房间号
      */
-    @TableField("room_id")
     private Long roomId;
 
     /**
      * 学号或工号
      */
-    @TableField("user_id")
     private Long userId;
 
 

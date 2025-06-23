@@ -8,8 +8,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * 分管领导 服务类
  * </p>
  *
- * @author author
- * @since 2025-06-22
+ * @author scu
+ * @since 2025-06-23
  */
 public interface ILeaderService extends IService<Leader> {
 

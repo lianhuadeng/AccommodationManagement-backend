@@ -2,17 +2,15 @@ package com.scu.accommodationmanagement.mapper;
 
 import com.scu.accommodationmanagement.model.po.Application;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
  * 住宿调整申请 Mapper 接口
  * </p>
  *
- * @author author
- * @since 2025-06-22
+ * @author scu
+ * @since 2025-06-23
  */
-@Mapper
 public interface ApplicationMapper extends BaseMapper<Application> {
 
 }
