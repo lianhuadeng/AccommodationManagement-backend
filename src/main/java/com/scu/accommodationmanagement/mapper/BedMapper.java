@@ -3,6 +3,8 @@ package com.scu.accommodationmanagement.mapper;
 import com.scu.accommodationmanagement.model.po.Bed;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
  * <p>
  * 床位 Mapper 接口

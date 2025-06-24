@@ -26,6 +26,10 @@ public class ApplicationController {
 
     @PostMapping("/add")
     public JsonResponse add(@RequestBody Application application) {
+        Application oldApplication = applicationService.getById(application.getStudentId());
+        if (oldApplication != null) {
+            return JsonResponse.failure("已提交过申请，请勿重复提交");
+        }
         applicationService.save(application);
         return JsonResponse.success("申请完成，请等待分管领导审核");
     }

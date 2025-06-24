@@ -13,5 +13,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IParkService extends IService<Park> {
 
-    void add(Park park);
+    void add(String name, String type, Integer buildingNum, Integer floorNum, Integer roomNumPerFloor, Integer bedNumPerRoom);
+
 }

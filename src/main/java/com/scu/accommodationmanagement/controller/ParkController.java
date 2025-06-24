@@ -25,8 +25,14 @@ public class ParkController {
 
     //TODO: 增加权限控制，加入park同时加入对应的building，room，bed等信息
     @PostMapping("/add")
-    public JsonResponse add(@RequestBody Park park) {
-        parkService.add(park);
+    public JsonResponse add(
+            @RequestParam(required = true) String name,
+            @RequestParam(required = true) String type,
+            @RequestParam(required = false) Integer buildingNum,
+            @RequestParam(required = false) Integer floorNum,
+            @RequestParam(required = false) Integer roomNumPerFloor,
+            @RequestParam(required = false) Integer bedNumPerRoom) {
+        parkService.add(name, type, buildingNum, floorNum, roomNumPerFloor, bedNumPerRoom);
 
         return JsonResponse.success("添加成功");
     }

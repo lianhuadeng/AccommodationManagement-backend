@@ -46,7 +46,7 @@ public class Park implements Serializable {
      * 园区内楼栋数量
      */
     @TableField("building_num")
-    private Long buildingNum;
+    private Integer buildingNum;
 
 
 }

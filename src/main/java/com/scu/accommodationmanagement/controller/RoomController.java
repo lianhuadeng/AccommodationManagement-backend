@@ -1,6 +1,12 @@
 package com.scu.accommodationmanagement.controller;
 
 
+import com.scu.accommodationmanagement.model.po.Room;
+import com.scu.accommodationmanagement.service.IRoomService;
+import com.scu.accommodationmanagement.utils.JsonResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -16,5 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/room")
 public class RoomController {
+    @Autowired
+    private IRoomService roomService;
+
+
 
 }

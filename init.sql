@@ -95,7 +95,7 @@ DROP TABLE IF EXISTS `building`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `building` (
-  `building_id` bigint NOT NULL AUTO_INCREMENT COMMENT '楼栋id',
+  `building_id` bigint NOT NULL COMMENT '楼栋id',
   `park_id` bigint DEFAULT NULL COMMENT '园区id',
   `dormitory_id` bigint DEFAULT NULL COMMENT '宿管工号',
   `floor_num` int DEFAULT NULL COMMENT '楼栋楼层数',
@@ -200,7 +200,7 @@ CREATE TABLE `park` (
   `park_id` bigint NOT NULL AUTO_INCREMENT COMMENT '园区id',
   `name` varchar(100) DEFAULT NULL COMMENT '园区名',
   `type` enum('教师公寓','男生公寓','女生公寓') DEFAULT NULL COMMENT '园区类型',
-  `building_num` bigint DEFAULT NULL COMMENT '园区内楼栋数量',
+  `building_num` int DEFAULT NULL COMMENT '园区内楼栋数量',
   PRIMARY KEY (`park_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='园区';
 /*!40101 SET character_set_client = @saved_cs_client */;
