@@ -23,9 +23,11 @@ public class ParkController {
     @Autowired
     private IParkService parkService;
 
+    //TODO: 增加权限控制，加入park同时加入对应的building，room，bed等信息
     @PostMapping("/add")
     public JsonResponse add(@RequestBody Park park) {
         parkService.add(park);
+
         return JsonResponse.success("添加成功");
     }
 

@@ -28,17 +28,29 @@ CREATE TABLE `application` (
   `leader_id` bigint DEFAULT NULL COMMENT '审核领导id',
   `dormitory_id` bigint DEFAULT NULL COMMENT '处理者宿舍管理员id',
   `application_type` enum('普通入住','普通调整','学生互换','个人退宿','校外住宿') NOT NULL COMMENT '申请类型',
-  `content` varchar(100) DEFAULT NULL COMMENT '申请内容',
+  `target_park` bigint DEFAULT NULL COMMENT '目标园区',
+  `target_building` bigint DEFAULT NULL COMMENT '目标楼栋',
+  `target_room` bigint DEFAULT NULL COMMENT '目标房间',
+  `target_bed` bigint DEFAULT NULL COMMENT '目标床位',
   `status` enum('待审核','待处理','已处理') NOT NULL DEFAULT '待审核' COMMENT '申请状态',
   `application_time` datetime DEFAULT NULL COMMENT '申请时间',
   `review_time` datetime DEFAULT NULL COMMENT '审核时间',
   `process_time` datetime DEFAULT NULL COMMENT '处理时间',
   `update_time` datetime DEFAULT NULL COMMENT '修改时间',
   `remark` varchar(100) DEFAULT NULL COMMENT '备注',
+  `is_deleted` bit(1) DEFAULT b'0',
   PRIMARY KEY (`application_id`),
   KEY `application_user_user_id_fk` (`student_id`),
   KEY `application_user_user_id_fk_2` (`leader_id`),
   KEY `application_user_user_id_fk_3` (`dormitory_id`),
+  KEY `application_building_building_id_fk` (`target_building`),
+  KEY `application_park_park_id_fk` (`target_park`),
+  KEY `application_room_room_id_fk` (`target_room`),
+  KEY `application_bed_bed_id_fk` (`target_bed`),
+  CONSTRAINT `application_bed_bed_id_fk` FOREIGN KEY (`target_bed`) REFERENCES `bed` (`bed_id`),
+  CONSTRAINT `application_building_building_id_fk` FOREIGN KEY (`target_building`) REFERENCES `building` (`building_id`),
+  CONSTRAINT `application_park_park_id_fk` FOREIGN KEY (`target_park`) REFERENCES `park` (`park_id`),
+  CONSTRAINT `application_room_room_id_fk` FOREIGN KEY (`target_room`) REFERENCES `room` (`room_id`),
   CONSTRAINT `application_user_user_id_fk` FOREIGN KEY (`student_id`) REFERENCES `user` (`user_id`),
   CONSTRAINT `application_user_user_id_fk_2` FOREIGN KEY (`leader_id`) REFERENCES `user` (`user_id`),
   CONSTRAINT `application_user_user_id_fk_3` FOREIGN KEY (`dormitory_id`) REFERENCES `user` (`user_id`)
@@ -62,6 +74,7 @@ CREATE TABLE `bed` (
   `room_id` bigint DEFAULT NULL COMMENT '房间号',
   `user_id` bigint DEFAULT NULL COMMENT '学号或工号',
   PRIMARY KEY (`bed_id`),
+  UNIQUE KEY `bed_pk` (`user_id`),
   KEY `bed_room_room_id_fk` (`room_id`),
   KEY `bed_user_user_id_fk` (`user_id`),
   CONSTRAINT `bed_room_room_id_fk` FOREIGN KEY (`room_id`) REFERENCES `room` (`room_id`),
@@ -266,6 +279,7 @@ CREATE TABLE `user` (
   `major` varchar(50) DEFAULT NULL COMMENT '专业',
   `grade` bigint DEFAULT NULL COMMENT '年级',
   `clazz` bigint DEFAULT NULL COMMENT '班级',
+  `sex` enum('男','女') DEFAULT NULL COMMENT '性别',
   `contact` varchar(50) DEFAULT NULL COMMENT '联系方式',
   `type` enum('学生','教师','系统管理员','宿舍管理员','维修管理员','分管领导') DEFAULT NULL COMMENT '用户类型',
   PRIMARY KEY (`user_id`)
@@ -276,7 +290,7 @@ CREATE TABLE `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `name`, `password`, `college`, `major`, `grade`, `clazz`, `contact`, `type`) VALUES (2022141460307,'林浩东','9bf1531c742724ddbb85f44de35f0264','计算机学院','计科',3,6,'12345678901','学生');
+INSERT INTO `user` (`user_id`, `name`, `password`, `college`, `major`, `grade`, `clazz`, `sex`, `contact`, `type`) VALUES (2022141460307,'林浩东','9bf1531c742724ddbb85f44de35f0264','计算机学院','计科',3,6,NULL,'12345678901','学生'),(2022141460311,'丘俊杰','aa8d62b2587ff43a6ac1acebc2eebfdc','计算机学院','计科',3,6,NULL,'12345678901','学生');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -287,4 +301,4 @@ INSERT INTO `user` (`user_id`, `name`, `password`, `college`, `major`, `grade`, 
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-23 14:44:23
+-- Dump completed on 2025-06-24 15:17:03

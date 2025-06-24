@@ -1,11 +1,14 @@
 package com.scu.accommodationmanagement.controller;
 
 
+import com.scu.accommodationmanagement.model.dto.PageDTO;
 import com.scu.accommodationmanagement.model.po.Application;
 import com.scu.accommodationmanagement.service.IApplicationService;
 import com.scu.accommodationmanagement.utils.JsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -39,12 +42,26 @@ public class ApplicationController {
 
     @PostMapping("/delete")
     public JsonResponse delete(int id) {
-        applicationService.removeById(id);
+        Application byId = applicationService.getById(id);
+        if (!byId.getStatus().equals("待审核")){
+            return JsonResponse.failure("该申请已处理，请勿重复操作");
+        }
+        byId.setIsDeleted(true);
+        applicationService.updateById(byId);
         return JsonResponse.success("删除成功");
     }
 
-    @GetMapping("/list")
-    public JsonResponse list() {
-        return JsonResponse.success(applicationService.list());
+    // TODO: 待测试
+    @GetMapping("/pageList")
+    public JsonResponse<PageDTO<Application>> pageList(
+            Integer pageNum,
+            Integer pageSize,
+            @RequestParam(required = false) String studentId,
+            @RequestParam(required = false) String applicationType,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) LocalDateTime startTime,
+            @RequestParam(required = false) LocalDateTime endTime
+            ) {
+        return JsonResponse.success(applicationService.pageList(studentId, applicationType, status, startTime, endTime, pageNum, pageSize));
     }
 }

@@ -19,6 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
         //user拦截器
         registry.addInterceptor(loginInterceptor).addPathPatterns(
                 //需要拦截的路径
+                "/user/userInfo",
                 "/user/updatePhone",
                 "/user/updatePassword",
                 "/user/updateEmail",

@@ -8,6 +8,7 @@ import com.scu.accommodationmanagement.service.IUserService;
 import com.scu.accommodationmanagement.utils.JsonResponse;
 import com.scu.accommodationmanagement.utils.JwtUtil;
 import com.scu.accommodationmanagement.utils.Md5Util;
+import com.scu.accommodationmanagement.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -64,6 +65,7 @@ public class UserController {
                 return JsonResponse.success(token,"system");
             }
         }
+
         return JsonResponse.failure("账号或密码错误");
     }
 
@@ -82,10 +84,10 @@ public class UserController {
     }
 
     @GetMapping("/userInfo")
-    public JsonResponse getUserInfo(@RequestParam Long userId) {
-        User user = userService.getById(userId);
+    public JsonResponse getUserInfo() {
+        User user = getCurrentUser();
         if (user != null) {
-            String location = bedService.getLocationByUserId(userId);
+            String location = bedService.getLocationByUserId(user.getUserId());
             UserInfoDTO userInfoDTO = new UserInfoDTO(
                     user.getName(),
                     user.getUserId(),
@@ -98,5 +100,11 @@ public class UserController {
         }
     }
 
-
+    // 获取当前登录用户信息
+    private User getCurrentUser() {
+        //从ThreadLocal中获取用户名
+        Map<String, Object> map = ThreadLocalUtil.get();
+        Long userID = (Long) map.get("userID");
+        return userService.getById(userID);
+    }
 }

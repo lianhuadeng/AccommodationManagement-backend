@@ -2,4 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.scu.accommodationmanagement.mapper.ApplicationMapper">
 
+    <select id="pageList" resultType="com.scu.accommodationmanagement.model.po.Application">
+        SELECT * FROM application
+        <where>
+            is_deleted = 0
+            <!-- 学生ID匹配 -->
+            <if test="studentId != null and studentId != ''">
+                AND student_id = #{studentId}
+            </if>
+
+            <!-- 申请类型匹配 -->
+            <if test="applicationType != null and applicationType != ''">
+                AND application_type = #{applicationType}
+            </if>
+
+            <!-- 状态匹配 -->
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+
+            <!-- 时间范围处理 -->
+            <if test="startTime != null and endTime != null">
+                AND application_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+            <if test="startTime != null and endTime == null">
+                AND application_time >= #{startTime}
+            </if>
+            <if test="startTime == null and endTime != null">
+                AND application_time &lt;= #{endTime}
+            </if>
+        </where>
+        ORDER BY application_time DESC
+    </select>
 </mapper>
