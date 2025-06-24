@@ -4,11 +4,16 @@ package com.scu.accommodationmanagement.controller;
 import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.service.IUserService;
 import com.scu.accommodationmanagement.utils.JsonResponse;
+import com.scu.accommodationmanagement.utils.JwtUtil;
 import com.scu.accommodationmanagement.utils.Md5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -27,13 +32,37 @@ public class UserController {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
-    ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+
 
     @PostMapping("/login")
     public JsonResponse login(@RequestParam Long userId, @RequestParam String password) {
+        ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+        User byId = userService.getById(userId);
+        if (Md5Util.getMD5String(password).equals(byId.getPassword())) {
+            // 登录成功
+            // 生成token
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("userID", byId.getUserId());
+            claims.put("userName", byId.getName());
+            String token = JwtUtil.genToken(claims);
 
-
+            // 把token存储到redis中
+            operations.set(token, token, 1, TimeUnit.HOURS);
+            if (byId.getType().equals("学生")){
+                return JsonResponse.success(token,"student");
+            }else if(byId.getType().equals("教师")){
+                return JsonResponse.success(token,"teacher");
+            }else if(byId.getType().equals("宿舍管理员")){
+                return JsonResponse.success(token,"dormitory");
+            }else if (byId.getType().equals("维系管理员")){
+                return JsonResponse.success(token,"maintenance");
+            }else {
+                return JsonResponse.success(token,"system");
+            }
+        }
+        return JsonResponse.failure("账号或密码错误");
     }
+
     @PostMapping("/addStudent")
     public JsonResponse addStudent(@RequestParam Long userId,
                                    @RequestParam String name,
@@ -61,5 +90,7 @@ public class UserController {
         return JsonResponse.successMessage("success");
 
     }
+
+
 
 }
