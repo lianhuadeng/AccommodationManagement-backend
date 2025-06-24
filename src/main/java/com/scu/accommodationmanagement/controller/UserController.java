@@ -1,7 +1,9 @@
 package com.scu.accommodationmanagement.controller;
 
 
+import com.scu.accommodationmanagement.model.dto.UserInfoDTO;
 import com.scu.accommodationmanagement.model.po.User;
+import com.scu.accommodationmanagement.service.IBedService;
 import com.scu.accommodationmanagement.service.IUserService;
 import com.scu.accommodationmanagement.utils.JsonResponse;
 import com.scu.accommodationmanagement.utils.JwtUtil;
@@ -11,6 +13,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -32,7 +35,8 @@ public class UserController {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
-
+    @Autowired
+    private IBedService bedService;
 
     @PostMapping("/login")
     public JsonResponse login(@RequestParam Long userId, @RequestParam String password) {
@@ -64,33 +68,35 @@ public class UserController {
     }
 
     @PostMapping("/addStudent")
-    public JsonResponse addStudent(@RequestParam Long userId,
-                                   @RequestParam String name,
-                                   @RequestParam String college,
-                                   @RequestParam String major,
-                                   @RequestParam Long grade,
-                                   @RequestParam Long clazz,
-                                   @RequestParam String contact) {
-        User byId = userService.getById(userId);
+    public JsonResponse addStudent(@RequestBody User user){
+        User byId = userService.getById(user.getUserId());
         if (byId != null) {
-            return JsonResponse.failure("学生已添加");
+            return JsonResponse.failure("学生已存在！");
         }
-        User user = new User();
-        user.setUserId(userId);
-        user.setName(name);
-        user.setCollege(college);
-        user.setMajor(major);
-        user.setGrade(grade);
-        user.setContact(contact);
-        user.setClazz(clazz);
         user.setType("学生");
         user.setPassword(Md5Util.getMD5String(user.getUserId().toString()
                 .substring(user.getUserId().toString().length() - 6)));
         userService.addStudent(user);
-        return JsonResponse.successMessage("success");
+        return JsonResponse.successMessage("添加成功！");
 
     }
 
+    @GetMapping("/userInfo")
+    public JsonResponse getUserInfo(@RequestParam Long userId) {
+        User user = userService.getById(userId);
+        if (user != null) {
+            String location = bedService.getLocationByUserId(userId);
+            UserInfoDTO userInfoDTO = new UserInfoDTO(
+                    user.getName(),
+                    user.getUserId(),
+                    user.getContact(),
+                    location
+            );
+            return JsonResponse.success(userInfoDTO);
+        }else {
+            return JsonResponse.failure("error");
+        }
+    }
 
 
 }

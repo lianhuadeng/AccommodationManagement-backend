@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `application`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `application` (
-  `application_id` bigint NOT NULL COMMENT '住宿调整申请id',
+  `application_id` bigint NOT NULL AUTO_INCREMENT COMMENT '住宿调整申请id',
   `student_id` bigint DEFAULT NULL COMMENT '申请人学号',
   `leader_id` bigint DEFAULT NULL COMMENT '审核领导id',
   `dormitory_id` bigint DEFAULT NULL COMMENT '处理者宿舍管理员id',
@@ -82,9 +82,11 @@ DROP TABLE IF EXISTS `building`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `building` (
-  `building_id` bigint NOT NULL COMMENT '楼栋id',
+  `building_id` bigint NOT NULL AUTO_INCREMENT COMMENT '楼栋id',
   `park_id` bigint DEFAULT NULL COMMENT '园区id',
   `dormitory_id` bigint DEFAULT NULL COMMENT '宿管工号',
+  `floor_num` int DEFAULT NULL COMMENT '楼栋楼层数',
+  `room_num` int DEFAULT NULL COMMENT '每层房间数',
   PRIMARY KEY (`building_id`),
   KEY `building_park_park_id_fk` (`park_id`),
   KEY `building_user_user_id_fk` (`dormitory_id`),
@@ -106,7 +108,7 @@ DROP TABLE IF EXISTS `disciplinary`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `disciplinary` (
-  `disciplinary_id` bigint NOT NULL COMMENT '违纪id',
+  `disciplinary_id` bigint NOT NULL AUTO_INCREMENT COMMENT '违纪id',
   `leader_id` bigint DEFAULT NULL COMMENT '扣分领导id',
   `student_id` bigint DEFAULT NULL COMMENT '学号',
   `dormitory_id` bigint DEFAULT NULL COMMENT '宿舍管理员id',
@@ -135,7 +137,7 @@ DROP TABLE IF EXISTS `hygiene_check`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `hygiene_check` (
-  `hygiene_id` bigint NOT NULL COMMENT '卫生检查id',
+  `hygiene_id` bigint NOT NULL AUTO_INCREMENT COMMENT '卫生检查id',
   `dormitory_id` bigint DEFAULT NULL COMMENT '宿舍管理员工号',
   `room_id` bigint DEFAULT NULL COMMENT '房间号',
   `score` bigint DEFAULT NULL COMMENT '分数',
@@ -182,9 +184,10 @@ DROP TABLE IF EXISTS `park`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `park` (
-  `park_id` bigint NOT NULL COMMENT '园区id',
+  `park_id` bigint NOT NULL AUTO_INCREMENT COMMENT '园区id',
   `name` varchar(100) DEFAULT NULL COMMENT '园区名',
-  `type` enum('teacher','boy','girl') DEFAULT NULL COMMENT '园区类型',
+  `type` enum('教师公寓','男生公寓','女生公寓') DEFAULT NULL COMMENT '园区类型',
+  `building_num` bigint DEFAULT NULL COMMENT '园区内楼栋数量',
   PRIMARY KEY (`park_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='园区';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -208,7 +211,7 @@ CREATE TABLE `repair` (
   `maintenance_id` bigint DEFAULT NULL COMMENT '维修管理员id',
   `location` varchar(100) DEFAULT NULL COMMENT '位置',
   `content` varchar(100) DEFAULT NULL COMMENT '报修内容',
-  `applicate_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '申请时间',
+  `apply_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '申请时间',
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`repair_id`),
   KEY `repair_user_user_id_fk` (`student_id`),
@@ -236,6 +239,7 @@ CREATE TABLE `room` (
   `room_id` bigint NOT NULL COMMENT '房间id',
   `building_id` bigint DEFAULT NULL COMMENT '楼栋id',
   `floor` int DEFAULT NULL COMMENT '楼层',
+  `bed_num` int DEFAULT NULL COMMENT '房间床位数',
   PRIMARY KEY (`room_id`),
   KEY `room_building_building_id_fk` (`building_id`),
   CONSTRAINT `room_building_building_id_fk` FOREIGN KEY (`building_id`) REFERENCES `building` (`building_id`)

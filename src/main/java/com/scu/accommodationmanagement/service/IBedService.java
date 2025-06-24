@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IBedService extends IService<Bed> {
 
+    String getLocationByUserId(Long userId);
 }

@@ -12,5 +12,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2025-06-23
  */
 public interface BedMapper extends BaseMapper<Bed> {
-
+    String getLocationByUserId(Long userId);
 }

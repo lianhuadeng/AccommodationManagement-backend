@@ -4,6 +4,7 @@ import com.scu.accommodationmanagement.model.po.Park;
 import com.scu.accommodationmanagement.mapper.ParkMapper;
 import com.scu.accommodationmanagement.service.IParkService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,5 +17,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ParkServiceImpl extends ServiceImpl<ParkMapper, Park> implements IParkService {
+    @Autowired
+    private ParkMapper parkMapper;
 
+    @Override
+    public void add(Park park) {
+        parkMapper.insert(park);
+    }
 }

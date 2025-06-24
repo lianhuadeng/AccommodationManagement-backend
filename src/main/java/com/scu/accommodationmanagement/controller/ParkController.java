@@ -1,9 +1,13 @@
 package com.scu.accommodationmanagement.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.scu.accommodationmanagement.model.po.Park;
+import com.scu.accommodationmanagement.service.IParkService;
+import com.scu.accommodationmanagement.utils.JsonResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 /**
  * <p>
@@ -16,5 +20,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/park")
 public class ParkController {
+    @Autowired
+    private IParkService parkService;
+
+    @PostMapping("/add")
+    public JsonResponse add(@RequestBody Park park) {
+        parkService.add(park);
+        return JsonResponse.success("添加成功");
+    }
+
+    @GetMapping("/list")
+    public JsonResponse list() {
+        List<Park> list = parkService.list();
+        return JsonResponse.success(list);
+    }
 
 }
