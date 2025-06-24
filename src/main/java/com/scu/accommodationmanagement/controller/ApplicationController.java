@@ -29,7 +29,10 @@ public class ApplicationController {
 
     @PostMapping("/update")
     public JsonResponse update(@RequestBody Application application) {
-
+        Application oldApplication = applicationService.getById(application.getApplicationId());
+        if (!oldApplication.getStatus().equals("待审核")){
+            return JsonResponse.failure("该申请已处理，请勿重复操作");
+        }
         applicationService.updateById(application);
         return JsonResponse.success("修改完成，请等待分管领导审核");
     }

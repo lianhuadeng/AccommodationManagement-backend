@@ -7,14 +7,14 @@ import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-
+import com.baomidou.mybatisplus.annotation.TableField;
 /**
  * <p>
  * 房间
  * </p>
  *
  * @author scu
- * @since 2025-06-23
+ * @since 2025-06-24
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -33,12 +33,20 @@ public class Room implements Serializable {
     /**
      * 楼栋id
      */
+    @TableField("building_id")
     private Long buildingId;
 
     /**
      * 楼层
      */
+    @TableField("floor")
     private Integer floor;
+
+    /**
+     * 房间床位数
+     */
+    @TableField("bed_num")
+    private Integer bedNum;
 
 
 }

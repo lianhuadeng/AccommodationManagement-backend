@@ -7,14 +7,14 @@ import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-
+import com.baomidou.mybatisplus.annotation.TableField;
 /**
  * <p>
  * 分管领导
  * </p>
  *
  * @author scu
- * @since 2025-06-23
+ * @since 2025-06-24
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -33,16 +33,19 @@ public class Leader implements Serializable {
     /**
      * 密码
      */
+    @TableField("password")
     private String password;
 
     /**
      * 姓名
      */
+    @TableField("name")
     private String name;
 
     /**
      * 联系方式
      */
+    @TableField("contact")
     private String contact;
 
 

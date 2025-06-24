@@ -7,14 +7,14 @@ import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-
+import com.baomidou.mybatisplus.annotation.TableField;
 /**
  * <p>
  * 用户信息
  * </p>
  *
  * @author scu
- * @since 2025-06-23
+ * @since 2025-06-24
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -33,41 +33,49 @@ public class User implements Serializable {
     /**
      * 姓名
      */
+    @TableField("name")
     private String name;
 
     /**
      * 密码
      */
+    @TableField("password")
     private String password;
 
     /**
      * 学院
      */
+    @TableField("college")
     private String college;
 
     /**
      * 专业
      */
+    @TableField("major")
     private String major;
 
     /**
      * 年级
      */
+    @TableField("grade")
     private Long grade;
 
     /**
      * 班级
      */
+    @TableField("clazz")
     private Long clazz;
 
     /**
      * 联系方式
      */
+    @TableField("contact")
     private String contact;
 
     /**
      * 用户类型
      */
+    @TableField("type")
     private String type;
 
 
