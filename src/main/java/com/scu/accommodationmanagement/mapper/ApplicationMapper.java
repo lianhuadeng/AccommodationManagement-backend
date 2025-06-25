@@ -17,4 +17,8 @@ import java.util.List;
 public interface ApplicationMapper extends BaseMapper<Application> {
 
     List<Application> pageList(String studentId, String applicationType, String status, LocalDateTime startTime, LocalDateTime endTime);
+
+    List<Application> myApplication(Long userId);
+
+    Application getLatestByApplierId(Long userId);
 }

@@ -31,7 +31,22 @@
             <if test="startTime == null and endTime != null">
                 AND application_time &lt;= #{endTime}
             </if>
+            and is_deleted = 0
         </where>
         ORDER BY application_time DESC
+    </select>
+
+    <select id="myApplication" resultType="com.scu.accommodationmanagement.model.po.Application">
+        SELECT *
+        FROM application
+        WHERE student_id = #{userId} and is_deleted = 0
+        ORDER BY application_time DESC
+    </select>
+    <select id="getLatestByApplierId" resultType="com.scu.accommodationmanagement.model.po.Application">
+        SELECT *
+        FROM application
+        WHERE student_id = #{userId} and is_deleted = 0
+        ORDER BY application_time DESC
+        LIMIT 1
     </select>
 </mapper>

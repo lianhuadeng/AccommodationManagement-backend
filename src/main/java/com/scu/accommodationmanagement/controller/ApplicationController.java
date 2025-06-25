@@ -3,7 +3,9 @@ package com.scu.accommodationmanagement.controller;
 
 import com.scu.accommodationmanagement.model.dto.PageDTO;
 import com.scu.accommodationmanagement.model.po.Application;
+import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.service.IApplicationService;
+import com.scu.accommodationmanagement.utils.CurrentUserUtil;
 import com.scu.accommodationmanagement.utils.JsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,17 +25,17 @@ import java.time.LocalDateTime;
 public class ApplicationController {
     @Autowired
     private IApplicationService applicationService;
-
+    //TODO:待测试
     @PostMapping("/add")
     public JsonResponse add(@RequestBody Application application) {
-        Application oldApplication = applicationService.getById(application.getStudentId());
-        if (oldApplication != null) {
+        Application oldApplication = applicationService.getLatestByApplierId(application.getApplierId());
+        if (oldApplication != null && !oldApplication.getStatus().equals("已处理")) {
             return JsonResponse.failure("已提交过申请，请勿重复提交");
         }
         applicationService.save(application);
         return JsonResponse.success("申请完成，请等待分管领导审核");
     }
-
+    //TODO:待测试
     @PostMapping("/update")
     public JsonResponse update(@RequestBody Application application) {
         Application oldApplication = applicationService.getById(application.getApplicationId());
@@ -43,16 +45,16 @@ public class ApplicationController {
         applicationService.updateById(application);
         return JsonResponse.success("修改完成，请等待分管领导审核");
     }
-
-    @PostMapping("/delete")
-    public JsonResponse delete(int id) {
-        Application byId = applicationService.getById(id);
+    //TODO:待测试
+    @PostMapping("/cancel")
+    public JsonResponse delete(Long applicationId) {
+        Application byId = applicationService.getById(applicationId);
         if (!byId.getStatus().equals("待审核")){
-            return JsonResponse.failure("该申请已处理，请勿重复操作");
+            return JsonResponse.failure("该申请已开始处理，无法删除！");
         }
         byId.setIsDeleted(true);
         applicationService.updateById(byId);
-        return JsonResponse.success("删除成功");
+        return JsonResponse.success("撤销成功");
     }
 
     // TODO: 待测试
@@ -68,4 +70,15 @@ public class ApplicationController {
             ) {
         return JsonResponse.success(applicationService.pageList(studentId, applicationType, status, startTime, endTime, pageNum, pageSize));
     }
+    //TODO:待测试
+    @GetMapping("/myApplication")
+    public JsonResponse myApplication() {
+        User user = CurrentUserUtil.getCurrentUser();
+        if (user == null) {
+            return JsonResponse.failure("请先登录");
+        }
+        return JsonResponse.success(applicationService.myApplication(user.getUserId()));
+    }
+
+
 }

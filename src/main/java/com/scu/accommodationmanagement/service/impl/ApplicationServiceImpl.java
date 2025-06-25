@@ -37,4 +37,15 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
         pageDTO.setItems(page.getResult());
         return pageDTO;
     }
+
+    @Override
+    public List<Application> myApplication(Long userId) {
+        return applicationMapper.myApplication(userId);
+    }
+
+    @Override
+    public Application getLatestByApplierId(Long userId) {
+        return applicationMapper.getLatestByApplierId(userId);
+    }
+
 }

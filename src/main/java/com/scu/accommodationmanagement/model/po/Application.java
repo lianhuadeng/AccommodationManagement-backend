@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author scu
- * @since 2025-06-24
+ * @since 2025-06-25
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -34,7 +34,7 @@ public class Application implements Serializable {
     /**
      * 申请人学号
      */
-    private Long studentId;
+    private Long applierId;
 
     /**
      * 审核领导id
@@ -52,9 +52,24 @@ public class Application implements Serializable {
     private String applicationType;
 
     /**
-     * 申请内容
+     * 目标园区
      */
-    private String content;
+    private Long targetPark;
+
+    /**
+     * 目标楼栋
+     */
+    private Long targetBuilding;
+
+    /**
+     * 目标房间
+     */
+    private Long targetRoom;
+
+    /**
+     * 目标床位
+     */
+    private Long targetBed;
 
     /**
      * 申请状态
@@ -87,6 +102,11 @@ public class Application implements Serializable {
     private String remark;
 
     private Boolean isDeleted;
+
+    /**
+     * 新住址
+     */
+    private String newAddress;
 
 
 }

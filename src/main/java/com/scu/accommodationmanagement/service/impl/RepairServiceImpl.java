@@ -4,7 +4,10 @@ import com.scu.accommodationmanagement.model.po.Repair;
 import com.scu.accommodationmanagement.mapper.RepairMapper;
 import com.scu.accommodationmanagement.service.IRepairService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -16,5 +19,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class RepairServiceImpl extends ServiceImpl<RepairMapper, Repair> implements IRepairService {
+    @Autowired
+    private RepairMapper repairMapper;
 
+    @Override
+    public List<Repair> getByUserId(Long userId) {
+        return repairMapper.getByUserId(userId);
+    }
 }

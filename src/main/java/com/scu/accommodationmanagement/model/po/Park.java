@@ -7,14 +7,14 @@ import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import com.baomidou.mybatisplus.annotation.TableField;
+
 /**
  * <p>
  * 园区
  * </p>
  *
  * @author scu
- * @since 2025-06-24
+ * @since 2025-06-25
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -33,19 +33,16 @@ public class Park implements Serializable {
     /**
      * 园区名
      */
-    @TableField("name")
     private String name;
 
     /**
      * 园区类型
      */
-    @TableField("type")
     private String type;
 
     /**
      * 园区内楼栋数量
      */
-    @TableField("building_num")
     private Integer buildingNum;
 
 

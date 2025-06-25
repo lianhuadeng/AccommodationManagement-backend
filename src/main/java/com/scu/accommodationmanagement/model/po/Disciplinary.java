@@ -7,14 +7,14 @@ import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import com.baomidou.mybatisplus.annotation.TableField;
+
 /**
  * <p>
  * 违纪记录
  * </p>
  *
  * @author scu
- * @since 2025-06-24
+ * @since 2025-06-25
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -33,31 +33,26 @@ public class Disciplinary implements Serializable {
     /**
      * 扣分领导id
      */
-    @TableField("leader_id")
     private Long leaderId;
 
     /**
      * 学号
      */
-    @TableField("student_id")
     private Long studentId;
 
     /**
      * 宿舍管理员id
      */
-    @TableField("dormitory_id")
     private Long dormitoryId;
 
     /**
      * 违纪原因
      */
-    @TableField("reason")
     private String reason;
 
     /**
      * 处罚分数
      */
-    @TableField("score")
     private Long score;
 
 

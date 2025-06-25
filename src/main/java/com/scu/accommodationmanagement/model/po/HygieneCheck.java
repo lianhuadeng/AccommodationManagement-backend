@@ -8,14 +8,14 @@ import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import com.baomidou.mybatisplus.annotation.TableField;
+
 /**
  * <p>
  * 卫生检查
  * </p>
  *
  * @author scu
- * @since 2025-06-24
+ * @since 2025-06-25
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -34,26 +34,27 @@ public class HygieneCheck implements Serializable {
     /**
      * 宿舍管理员工号
      */
-    @TableField("dormitory_id")
     private Long dormitoryId;
 
     /**
      * 房间号
      */
-    @TableField("room_id")
     private Long roomId;
 
     /**
      * 分数
      */
-    @TableField("score")
     private Long score;
 
     /**
      * 检查时间
      */
-    @TableField("check_time")
     private LocalDateTime checkTime;
+
+    /**
+     * 扣分原因
+     */
+    private String reason;
 
 
 }
