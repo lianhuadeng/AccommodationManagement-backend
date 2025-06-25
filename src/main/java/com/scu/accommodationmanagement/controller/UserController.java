@@ -4,6 +4,7 @@ package com.scu.accommodationmanagement.controller;
 import com.scu.accommodationmanagement.model.dto.UserInfoDTO;
 import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.model.vo.LoginVO;
+import com.scu.accommodationmanagement.service.FileService;
 import com.scu.accommodationmanagement.service.IBedService;
 import com.scu.accommodationmanagement.service.IUserService;
 import com.scu.accommodationmanagement.utils.*;
@@ -11,10 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static com.scu.accommodationmanagement.utils.CurrentUserUtil.getCurrentUser;
@@ -37,11 +38,17 @@ public class UserController {
 
     @Autowired
     private IBedService bedService;
+    @Autowired
+    private FileService fileService;
+
 
     @PostMapping("/login")
     public JsonResponse login(@RequestBody LoginVO loginVO) {
         ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
         User byId = userService.getById(loginVO.getUserId());
+        if (byId == null) {
+            return JsonResponse.failure("账号或密码错误");
+        }
         if (Md5Util.getMD5String(loginVO.getPassword()).equals(byId.getPassword())) {
             // 登录成功
             // 生成token
@@ -138,5 +145,70 @@ public class UserController {
 //
 //    }
 
+    @PostMapping("/systemAdmin/addStudentWithExcel")
+    public JsonResponse addStudentWithExcel(@RequestParam("file") MultipartFile file) throws IOException {
+        // 权限校验
+        User currentUser = getCurrentUser();
+        if (currentUser == null || !currentUser.getType().equals("系统管理员")) {
+            return JsonResponse.failure("无权限操作！");
+        }
 
+        try {
+            // 1. 检查文件是否为空
+            if (file.isEmpty()) {
+                return JsonResponse.failure("上传的文件为空");
+            }
+
+            // 2. 检查文件类型
+            String contentType = file.getContentType();
+            if (contentType == null || !(contentType.equals("application/vnd.ms-excel") ||
+                    contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))) {
+                return JsonResponse.failure("仅支持Excel文件(xls/xlsx)");
+            }
+
+            // 3. 解析Excel
+            List<User> users = fileService.parseUserExcel(file);
+
+            // 4. 数据处理
+            List<User> validUsers = new ArrayList<>();
+            int successCount = 0;
+            int errorCount = 0;
+
+            for (User user : users) {
+                // 跳过无效数据
+                if (user.getUserId() == null || user.getName() == null) {
+                    errorCount++;
+                    continue;
+                }
+
+                // 检查用户是否已存在
+                if (userService.getById(user.getUserId()) != null) {
+                    errorCount++;
+                    continue;
+                }
+
+                // 设置默认密码
+                String defaultPassword = user.getUserId().toString();
+                defaultPassword = defaultPassword.substring(Math.max(0, defaultPassword.length() - 6));
+                user.setPassword(Md5Util.getMD5String(defaultPassword));
+
+                // 设置用户类型
+                user.setType("学生");
+
+                validUsers.add(user);
+            }
+
+            // 5. 批量保存
+            if (!validUsers.isEmpty()) {
+                userService.saveBatch(validUsers);
+                successCount = validUsers.size();
+            }
+
+            return JsonResponse.success("导入完成" + successCount + "条，失败" + errorCount + "条");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonResponse.failure("导入失败: " + e.getMessage());
+        }
+    }
 }

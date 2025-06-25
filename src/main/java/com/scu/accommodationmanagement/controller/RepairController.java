@@ -2,11 +2,17 @@ package com.scu.accommodationmanagement.controller;
 
 
 import com.scu.accommodationmanagement.model.po.Repair;
+import com.scu.accommodationmanagement.service.FileService;
 import com.scu.accommodationmanagement.service.IRepairService;
 import com.scu.accommodationmanagement.utils.CurrentUserUtil;
+import com.scu.accommodationmanagement.utils.ImageCompressUtil;
 import com.scu.accommodationmanagement.utils.JsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * <p>
@@ -21,6 +27,9 @@ import org.springframework.web.bind.annotation.*;
 public class RepairController {
     @Autowired
     private IRepairService repairService;
+
+    @Autowired
+    private FileService fileService;
 
     //TODO:待测试
     @PostMapping("/add")
@@ -65,5 +74,18 @@ public class RepairController {
         Long userId = CurrentUserUtil.getCurrentUser().getUserId();
         return JsonResponse.success(repairService.getByUserId(userId));
     }
+
+    @PostMapping("/uploadImage")
+    public JsonResponse uploadImage(@RequestParam MultipartFile file){
+        try {
+            //图片压缩
+            MultipartFile compressedFile = ImageCompressUtil.compressImage(file);
+            Map upload = fileService.upload(compressedFile);
+            return JsonResponse.success(upload.get("url"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }

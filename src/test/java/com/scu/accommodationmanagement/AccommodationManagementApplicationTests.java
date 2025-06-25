@@ -7,7 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 class AccommodationManagementApplicationTests {
 
     @Test
-    void contextLoads() {
+    void uploadTest() {
+
     }
 
 }
