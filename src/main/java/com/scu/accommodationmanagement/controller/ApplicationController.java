@@ -7,7 +7,6 @@ import com.scu.accommodationmanagement.model.po.Bed;
 import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.service.IApplicationService;
 import com.scu.accommodationmanagement.service.IBedService;
-import com.scu.accommodationmanagement.service.IUserService;
 import com.scu.accommodationmanagement.utils.CurrentUserUtil;
 import com.scu.accommodationmanagement.utils.JsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,16 +98,29 @@ public class ApplicationController {
             @RequestParam(required = false) LocalDateTime startTime,
             @RequestParam(required = false) LocalDateTime endTime
             ) {
+        User user = CurrentUserUtil.getCurrentUser();
+        if (user.getType().equals("分管领导") || user.getType().equals("系统管理员")){
+            return JsonResponse.failure("无权限查看申请！");
+        }
         return JsonResponse.success(applicationService.pageList(studentId, applicationType, status, startTime, endTime, pageNum, pageSize));
     }
     //TODO:待测试
-    @GetMapping("/myApplication")
-    public JsonResponse myApplication() {
+    @GetMapping("/userApplications")
+    public JsonResponse userApplications(@RequestParam String status) {
         User user = CurrentUserUtil.getCurrentUser();
-        if (user == null) {
-            return JsonResponse.failure("请先登录");
+        if (!user.getType().equals("学生")) {
+            return JsonResponse.failure("请先登录学生账号！");
         }
-        return JsonResponse.success(applicationService.myApplication(user.getUserId()));
+        return JsonResponse.success(applicationService.userApplications(user.getUserId(), status));
+    }
+
+    @GetMapping("/adminApplications")
+    public JsonResponse adminApplications(@RequestParam String status) {
+        User user = CurrentUserUtil.getCurrentUser();
+        if (!user.getType().equals("宿舍管理员")){
+            return JsonResponse.failure("无权限查看申请！");
+        }
+        return JsonResponse.success(applicationService.adminApplications(user.getUserId(), status));
     }
 
     //TODO: 待测试
@@ -121,6 +133,9 @@ public class ApplicationController {
             return JsonResponse.failure("无权限审核申请！");
         }
         Application application = applicationService.getById(applicationId);
+        if (!application.getStatus().equals("待审核")){
+            return JsonResponse.failure("该申请已处理，请勿重复操作！");
+        }
         application.setLeaderId(user.getUserId());
         application.setDormitoryId(dormitoryId);
         if(!opinion.isEmpty()){
@@ -142,22 +157,27 @@ public class ApplicationController {
             return JsonResponse.failure("无权限处理申请！");
         }
         Application application = applicationService.getById(applicationId);
+        if (application.getStatus().equals("待审核") || application.getStatus().equals("不通过")){
+            return JsonResponse.failure("该申请未审核通过，无法处理！");
+        }
         Bed targetbed = bedService.getById(application.getTargetBed());
-        if (application.getApplicationType().equals("普通入住")
-                || application.getApplicationType().equals("普通调整")){
-            targetbed.setUserId(application.getApplierId());
-            bedService.updateById(targetbed);
-        } else if (application.getApplicationType().equals("学生互换")) {
-            Bed currentBed = bedService.getByUserId(application.getApplierId());
-            currentBed.setUserId(targetbed.getUserId());
-            targetbed.setUserId(application.getApplierId());
-            bedService.updateById(currentBed);
-            bedService.updateById(targetbed);
-        } else if (application.getApplicationType().equals("个人退宿")
-                || application.getApplicationType().equals("校外住宿")) {
-            Bed currentBed = bedService.getByUserId(application.getApplierId());
-            currentBed.setUserId(null);
-            bedService.updateById(currentBed);
+        switch (application.getApplicationType()) {
+            case "普通入住", "普通调整" -> {
+                targetbed.setUserId(application.getApplierId());
+                bedService.updateById(targetbed);
+            }
+            case "学生互换" -> {
+                Bed currentBed = bedService.getByUserId(application.getApplierId());
+                currentBed.setUserId(targetbed.getUserId());
+                targetbed.setUserId(application.getApplierId());
+                bedService.updateById(currentBed);
+                bedService.updateById(targetbed);
+            }
+            case "个人退宿", "校外住宿" -> {
+                Bed currentBed = bedService.getByUserId(application.getApplierId());
+                currentBed.setUserId(null);
+                bedService.updateById(currentBed);
+            }
         }
 
         application.setStatus("已处理");

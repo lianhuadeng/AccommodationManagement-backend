@@ -28,3 +28,4 @@ mybatis:
   mapper-locations: classpath:/mybatis/mapper/*.xml, classpath:/mybatis/mapper/extend/*.xml
 
 file-upload-path: ./file
+

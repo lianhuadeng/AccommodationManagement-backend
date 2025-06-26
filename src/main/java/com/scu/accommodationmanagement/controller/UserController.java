@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static com.scu.accommodationmanagement.utils.CurrentUserUtil.getCurrentUser;
 
@@ -149,8 +150,8 @@ public class UserController {
 //
 //    }
 
-    @PostMapping("/systemAdmin/addStudentWithExcel")
-    public JsonResponse addStudentWithExcel(@RequestParam("file") MultipartFile file) throws IOException {
+    @PostMapping("/systemAdmin/addUserWithExcel")
+    public JsonResponse addUserWithExcel(@RequestParam("file") MultipartFile file, @RequestParam String userType) throws IOException {
         // 权限校验
         User currentUser = getCurrentUser();
         if (currentUser == null || !currentUser.getType().equals("系统管理员")) {
@@ -171,7 +172,7 @@ public class UserController {
             }
 
             // 3. 解析Excel
-            List<User> users = fileService.parseUserExcel(file);
+            List<User> users = fileService.parseUserExcel(file, userType);
 
             // 4. 数据处理
             List<User> validUsers = new ArrayList<>();
@@ -197,7 +198,7 @@ public class UserController {
                 user.setPassword(Md5Util.getMD5String(defaultPassword));
 
                 // 设置用户类型
-                user.setType("学生");
+                user.setType(userType);
 
                 validUsers.add(user);
             }
@@ -216,7 +217,7 @@ public class UserController {
         }
     }
 
-    //TODO: 待测试
+    //TODO: 待测试；可能需要分页
     @GetMapping("/maintenanceList")
     public JsonResponse getMaintenanceList(){
         User currentUser = getCurrentUser();
@@ -246,5 +247,8 @@ public class UserController {
         List<User> users = userService.list(new QueryWrapper<User>().eq("type", "分管领导"));
         return JsonResponse.success(users);
     }
+
+
+
 
 }

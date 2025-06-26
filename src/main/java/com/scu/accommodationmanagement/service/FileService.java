@@ -10,5 +10,5 @@ import java.util.Map;
 public interface FileService {
     Map upload(MultipartFile file) throws IOException;
 
-    List<User> parseUserExcel(MultipartFile file) throws IOException;;
+    List<User> parseUserExcel(MultipartFile file, String userType) throws IOException;;
 }

@@ -44,11 +44,6 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
     }
 
     @Override
-    public List<Application> myApplication(Long userId) {
-        return applicationMapper.myApplication(userId);
-    }
-
-    @Override
     public Application getLatestByApplierId(Long userId) {
         return applicationMapper.getLatestByApplierId(userId);
     }
@@ -58,6 +53,15 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
         return applicationMapper.getByTargetBed(targetBed);
     }
 
+    @Override
+    public List<Application> userApplications(Long userId, String status) {
+        return applicationMapper.selectList(new QueryWrapper<Application>().eq("applier_id", userId).eq("status", status).eq("is_deleted", 0));
+    }
+
+    @Override
+    public List<Application> adminApplications(Long userId, String status) {
+        return applicationMapper.selectList(new QueryWrapper<Application>().eq("dormitory_id", userId).eq("status", status).eq("is_deleted", 0));
+    }
 
 
 }

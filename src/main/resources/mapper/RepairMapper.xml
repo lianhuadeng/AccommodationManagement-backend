@@ -2,7 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.scu.accommodationmanagement.mapper.RepairMapper">
 
-    <select id="getByUserId" resultType="com.scu.accommodationmanagement.model.po.Repair">
-        SELECT * FROM repair WHERE student_id = #{userId} AND is_deleted = 0
+
+    <select id="userRepairs" resultType="com.scu.accommodationmanagement.model.po.Repair">
+        SELECT *
+        FROM repair
+        WHERE student_id = #{userId}
+          AND status = #{status}
+          and is_deleted = 0
+        ORDER BY apply_time
+    </select>
+    <select id="adminRepairs" resultType="com.scu.accommodationmanagement.model.po.Repair">
+        SELECT *
+        FROM repair
+        where status = #{status}
+          and is_deleted = 0
+          and maintenance_id = #{userId}
+        ORDER BY apply_time
     </select>
 </mapper>

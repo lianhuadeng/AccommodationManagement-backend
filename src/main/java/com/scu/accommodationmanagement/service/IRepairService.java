@@ -15,5 +15,8 @@ import java.util.List;
  */
 public interface IRepairService extends IService<Repair> {
 
-    List<Repair> getByUserId(Long userId);
+
+    List<Repair> userRepairs(Long userId, String status);
+
+    List<Repair> adminRepairs(Long userId, String status);
 }

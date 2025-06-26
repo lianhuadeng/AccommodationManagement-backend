@@ -2,7 +2,9 @@ package com.scu.accommodationmanagement.controller;
 
 
 import com.scu.accommodationmanagement.model.po.Park;
+import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.service.IParkService;
+import com.scu.accommodationmanagement.utils.CurrentUserUtil;
 import com.scu.accommodationmanagement.utils.JsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,6 @@ public class ParkController {
     @Autowired
     private IParkService parkService;
 
-    //TODO: 增加权限控制，加入park同时加入对应的building，room，bed等信息
     @PostMapping("/add")
     public JsonResponse add(
             @RequestParam(required = true) String name,
@@ -32,6 +33,10 @@ public class ParkController {
             @RequestParam(required = false) Integer floorNum,
             @RequestParam(required = false) Integer roomNumPerFloor,
             @RequestParam(required = false) Integer bedNumPerRoom) {
+        User user = CurrentUserUtil.getCurrentUser();
+        if (user == null || !user.getType().equals("系统管理员")) {
+            return JsonResponse.failure("权限不足");
+        }
         parkService.add(name, type, buildingNum, floorNum, roomNumPerFloor, bedNumPerRoom);
 
         return JsonResponse.success("添加成功");

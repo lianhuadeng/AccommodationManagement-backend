@@ -254,6 +254,7 @@ CREATE TABLE `user` (
   `password` varchar(100) DEFAULT NULL COMMENT '密码',
   `college` varchar(50) DEFAULT NULL COMMENT '学院',
   `major` varchar(50) DEFAULT NULL COMMENT '专业',
+  `title` varchar(50) DEFAULT NULL COMMENT '职称',
   `grade` bigint DEFAULT NULL COMMENT '年级',
   `clazz` bigint DEFAULT NULL COMMENT '班级',
   `sex` enum('男','女') DEFAULT NULL COMMENT '性别',

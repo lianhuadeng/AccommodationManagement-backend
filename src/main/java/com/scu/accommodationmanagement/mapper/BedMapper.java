@@ -15,4 +15,6 @@ import java.util.List;
  */
 public interface BedMapper extends BaseMapper<Bed> {
     String getLocationByUserId(Long userId);
+
+
 }

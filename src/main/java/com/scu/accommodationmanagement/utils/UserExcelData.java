@@ -5,32 +5,11 @@ import lombok.Data;
 
 @Data
 public class UserExcelData {
-//    @ExcelProperty(index = 0)
-//    private Long userId;
-//
-//    @ExcelProperty(index = 1)
-//    private String name;
-//
-//    @ExcelProperty(index = 2)
-//    private String college;
-//
-//    @ExcelProperty(index = 3)
-//    private String major;
-//
-//    @ExcelProperty(index = 4)
-//    private Long grade;
-//
-//    @ExcelProperty(index = 5)
-//    private Long clazz;
-//
-//    @ExcelProperty(index = 6)
-//    private String sex;
-//
-//    @ExcelProperty(index = 7)
-//    private String contact;
-
     @ExcelProperty("学号")
-    private Long userId;
+    private Long studentId;
+
+    @ExcelProperty("工号")
+    private Long teacherId;
 
     @ExcelProperty("姓名")
     private String name;
@@ -46,6 +25,9 @@ public class UserExcelData {
 
     @ExcelProperty("班级")
     private Long clazz;
+
+    @ExcelProperty("职称")
+    private String title;
 
     @ExcelProperty("性别")
     private String sex;

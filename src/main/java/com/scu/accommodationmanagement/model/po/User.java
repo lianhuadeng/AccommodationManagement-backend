@@ -75,5 +75,7 @@ public class User implements Serializable {
      */
     private String type;
 
+    private String title;
+
 
 }

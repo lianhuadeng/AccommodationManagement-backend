@@ -37,7 +37,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public List<User> parseUserExcel(MultipartFile file) throws IOException {
+    public List<User> parseUserExcel(MultipartFile file, String userType) throws IOException {
         List<User> users = new ArrayList<>();
 
         // 读取标题行获取列名映射
@@ -48,11 +48,22 @@ public class FileServiceImpl implements FileService {
             headerRow.forEach(cell -> headerMap.put(cell.getStringCellValue(), cell.getColumnIndex()));
         }
 
-        // 检查必要列是否存在
-        String[] requiredColumns = {"学号", "姓名"};
-        for (String col : requiredColumns) {
-            if (!headerMap.containsKey(col)) {
-                throw new IOException("缺少必要列: " + col);
+        if (userType.equals("学生")) {
+            // 检查必要列是否存在
+            String[] requiredColumns = {"学号", "姓名"};
+            for (String col : requiredColumns) {
+                if (!headerMap.containsKey(col)) {
+                    throw new IOException("缺少必要列: " + col);
+                }
+            }
+        }
+        if (userType.equals("教师")){
+            // 检查必要列是否存在
+            String[] requiredColumns = {"工号", "姓名"};
+            for (String col : requiredColumns) {
+                if (!headerMap.containsKey(col)) {
+                    throw new IOException("缺少必要列: " + col);
+                }
             }
         }
 
@@ -63,14 +74,21 @@ public class FileServiceImpl implements FileService {
                     @Override
                     public void invoke(UserExcelData data, AnalysisContext context) {
                         User user = new User();
-                        user.setUserId(data.getUserId());
+                        if (userType.equals("学生"))
+                            user.setUserId(data.getStudentId());
+                        else if (userType.equals("教师"))
+                            user.setUserId(data.getTeacherId());
                         user.setName(data.getName());
                         user.setCollege(data.getCollege());
                         user.setMajor(data.getMajor());
-                        user.setGrade(data.getGrade());
-                        user.setClazz(data.getClazz());
+                        if (userType.equals("学生")){
+                            user.setGrade(data.getGrade());
+                            user.setClazz(data.getClazz());
+                        }
                         user.setSex(data.getSex());
                         user.setContact(data.getContact());
+                        if (userType.equals("教师"))
+                            user.setTitle(data.getTitle());
                         users.add(user);
                     }
 

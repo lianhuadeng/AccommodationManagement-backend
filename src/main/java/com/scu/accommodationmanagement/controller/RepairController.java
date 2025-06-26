@@ -68,13 +68,28 @@ public class RepairController {
         return JsonResponse.successMessage("修改成功");
     }
 
+    // 学生查看自己的申请
     //TODO:待测试
-    @GetMapping("/myRepairs")
-    public JsonResponse myRepairs() {
-
-        Long userId = CurrentUserUtil.getCurrentUser().getUserId();
-        return JsonResponse.success(repairService.getByUserId(userId));
+    @GetMapping("/userRepairs")
+    public JsonResponse userRepairs(@RequestParam String status) {
+        User user = CurrentUserUtil.getCurrentUser();
+        if (!user.getType().equals("学生")){
+            return JsonResponse.failure("请以学生身份登录");
+        }
+        return JsonResponse.success(repairService.userRepairs(user.getUserId(), status));
     }
+
+    // 维修管理员查看需要自己处理的申请
+    //TODO:待测试
+    @GetMapping("/adminRepairs")
+    public JsonResponse adminRepairs(@RequestParam String status) {
+        User user = CurrentUserUtil.getCurrentUser();
+        if (!user.getType().equals("维修管理员")){
+            return JsonResponse.failure("权限不足");
+        }
+        return JsonResponse.success(repairService.adminRepairs(user.getUserId(), status));
+    }
+
 
     @PostMapping("/uploadImage")
     public JsonResponse uploadImage(@RequestParam MultipartFile file){
@@ -88,7 +103,7 @@ public class RepairController {
         }
     }
 
-    // 分配维修
+    // 宿舍管理员分配维修
     //TODO: 待测试
     @PostMapping("/allocate")
     public JsonResponse allocate(@RequestParam Long repairId, @RequestParam Long maintenanceId) {

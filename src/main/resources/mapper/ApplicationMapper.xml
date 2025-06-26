@@ -39,8 +39,8 @@
     <select id="myApplication" resultType="com.scu.accommodationmanagement.model.po.Application">
         SELECT *
         FROM application
-        WHERE applier_id = #{userId} and is_deleted = 0
-        ORDER BY application_time DESC
+        WHERE applier_id = #{userId} and status = #{status} and is_deleted = 0
+        ORDER BY application_time
     </select>
     <select id="getLatestByApplierId" resultType="com.scu.accommodationmanagement.model.po.Application">
         SELECT *

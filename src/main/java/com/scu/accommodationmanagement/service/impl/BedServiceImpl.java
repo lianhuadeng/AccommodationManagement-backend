@@ -1,12 +1,17 @@
 package com.scu.accommodationmanagement.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.scu.accommodationmanagement.mapper.RoomMapper;
+import com.scu.accommodationmanagement.mapper.UserMapper;
 import com.scu.accommodationmanagement.model.po.Bed;
 import com.scu.accommodationmanagement.mapper.BedMapper;
 import com.scu.accommodationmanagement.service.IBedService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -20,6 +25,11 @@ import org.springframework.stereotype.Service;
 public class BedServiceImpl extends ServiceImpl<BedMapper, Bed> implements IBedService {
     @Autowired
     private BedMapper bedMapper;
+    @Autowired
+    private RoomMapper roomMapper;
+    @Autowired
+    private UserMapper userMapper;
+
     @Override
     public String getLocationByUserId(Long userId) {
         return bedMapper.getLocationByUserId(userId);
@@ -29,4 +39,5 @@ public class BedServiceImpl extends ServiceImpl<BedMapper, Bed> implements IBedS
     public Bed getByUserId(Long applierId) {
         return bedMapper.selectOne(new QueryWrapper<Bed>().eq("user_id", applierId));
     }
+
 }

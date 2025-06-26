@@ -19,10 +19,11 @@ public interface IApplicationService extends IService<Application> {
 
     PageDTO<Application> pageList(String studentId, String applicationType, String status, LocalDateTime startTime, LocalDateTime endTime, Integer pageNum, Integer pageSize);
 
-    List<Application> myApplication(Long userId);
-
     Application getLatestByApplierId(Long userId);
 
     Application getByTargetBed(Long targetBed);
 
+    List<Application> userApplications(Long userId, String status);
+
+    List<Application> adminApplications(Long userId, String status);
 }

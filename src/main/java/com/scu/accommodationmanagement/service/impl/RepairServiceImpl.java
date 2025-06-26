@@ -22,8 +22,14 @@ public class RepairServiceImpl extends ServiceImpl<RepairMapper, Repair> impleme
     @Autowired
     private RepairMapper repairMapper;
 
+
     @Override
-    public List<Repair> getByUserId(Long userId) {
-        return repairMapper.getByUserId(userId);
+    public List<Repair> userRepairs(Long userId, String status) {
+        return repairMapper.userRepairs(userId, status);
+    }
+
+    @Override
+    public List<Repair> adminRepairs(Long userId, String status) {
+        return repairMapper.adminRepairs(userId, status);
     }
 }
