@@ -32,11 +32,11 @@ CREATE TABLE `application` (
   `target_building` bigint DEFAULT NULL COMMENT '目标楼栋',
   `target_room` bigint DEFAULT NULL COMMENT '目标房间',
   `target_bed` bigint DEFAULT NULL COMMENT '目标床位',
-  `status` enum('待审核','待处理','已处理', '不通过') NOT NULL DEFAULT '待审核' COMMENT '申请状态',
-  `application_time` datetime DEFAULT CURRENT_TIMESTAMP NULL  COMMENT '申请时间',
+  `status` enum('待审核','待处理','已处理','不通过') NOT NULL DEFAULT '待审核' COMMENT '申请状态',
+  `application_time` datetime DEFAULT (now()) COMMENT '申请时间',
   `review_time` datetime DEFAULT NULL COMMENT '审核时间',
   `process_time` datetime DEFAULT NULL COMMENT '处理时间',
-  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NULL COMMENT '修改时间',
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `remark` varchar(100) DEFAULT NULL COMMENT '备注',
   `is_deleted` bit(1) DEFAULT b'0',
   `new_address` varchar(100) DEFAULT NULL COMMENT '新住址',
@@ -56,15 +56,14 @@ CREATE TABLE `application` (
   CONSTRAINT `application_user_user_id_fk` FOREIGN KEY (`applier_id`) REFERENCES `user` (`user_id`),
   CONSTRAINT `application_user_user_id_fk_2` FOREIGN KEY (`leader_id`) REFERENCES `user` (`user_id`),
   CONSTRAINT `application_user_user_id_fk_3` FOREIGN KEY (`dormitory_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='住宿调整申请';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='住宿调整申请';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `application`
 --
 
-LOCK TABLES `application` WRITE;
-UNLOCK TABLES;
+INSERT INTO `application` (`application_id`, `applier_id`, `leader_id`, `dormitory_id`, `application_type`, `target_park`, `target_building`, `target_room`, `target_bed`, `status`, `application_time`, `review_time`, `process_time`, `update_time`, `remark`, `is_deleted`, `new_address`, `opinion`) VALUES (3,2022141460307,NULL,NULL,'普通入住',1,101,1010401,101040101,'待审核','2025-06-26 09:52:42',NULL,NULL,'2025-06-26 10:01:20','222',_binary '\0',NULL,NULL),(6,2022141460311,NULL,NULL,'普通入住',1,101,1010401,101010101,'待处理','2025-06-26 10:45:17',NULL,NULL,'2025-06-26 10:49:03','111',_binary '\0',NULL,NULL),(7,2022141460316,NULL,NULL,'普通入住',1,101,1010401,101010101,'待审核','2025-06-26 10:45:54',NULL,NULL,'2025-06-26 10:45:54','111',_binary '\0',NULL,NULL),(8,2022141460336,NULL,NULL,'普通入住',1,101,1010401,101010101,'待审核','2025-06-26 10:47:21',NULL,NULL,'2025-06-26 10:47:21','111',_binary '\0',NULL,NULL),(9,2022141460311,NULL,NULL,'普通入住',1,101,1010401,101010204,'待审核','2025-06-26 10:55:11',NULL,NULL,'2025-06-26 10:58:04','lhd666',_binary '',NULL,NULL);
 
 --
 -- Table structure for table `bed`
@@ -86,14 +85,6 @@ CREATE TABLE `bed` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='床位';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `bed`
---
-
-
---
--- Table structure for table `building`
---
 
 DROP TABLE IF EXISTS `building`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -116,9 +107,7 @@ CREATE TABLE `building` (
 -- Dumping data for table `building`
 --
 
-LOCK TABLES `building` WRITE;
 INSERT INTO `building` (`building_id`, `park_id`, `dormitory_id`, `floor_num`, `room_num`) VALUES (101,1,NULL,10,20),(102,1,NULL,10,20),(103,1,NULL,10,20),(104,1,NULL,5,10);
-UNLOCK TABLES;
 
 --
 -- Table structure for table `disciplinary`
@@ -148,8 +137,6 @@ CREATE TABLE `disciplinary` (
 -- Dumping data for table `disciplinary`
 --
 
-LOCK TABLES `disciplinary` WRITE;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `hygiene_check`
@@ -163,7 +150,7 @@ CREATE TABLE `hygiene_check` (
   `dormitory_id` bigint DEFAULT NULL COMMENT '宿舍管理员工号',
   `room_id` bigint DEFAULT NULL COMMENT '房间号',
   `score` bigint DEFAULT NULL COMMENT '分数',
-  `check_time` datetime DEFAULT CURRENT_TIMESTAMP NULL  COMMENT '检查时间',
+  `check_time` datetime DEFAULT NULL COMMENT '检查时间',
   `reason` varchar(100) DEFAULT NULL COMMENT '扣分原因',
   PRIMARY KEY (`hygiene_id`),
   KEY `hygiene_check_room_room_id_fk` (`room_id`),
@@ -177,8 +164,6 @@ CREATE TABLE `hygiene_check` (
 -- Dumping data for table `hygiene_check`
 --
 
-LOCK TABLES `hygiene_check` WRITE;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `park`
@@ -200,9 +185,7 @@ CREATE TABLE `park` (
 -- Dumping data for table `park`
 --
 
-LOCK TABLES `park` WRITE;
 INSERT INTO `park` (`park_id`, `name`, `type`, `building_num`) VALUES (1,'碧桂园','教师公寓',4);
-UNLOCK TABLES;
 
 --
 -- Table structure for table `repair`
@@ -238,8 +221,6 @@ CREATE TABLE `repair` (
 -- Dumping data for table `repair`
 --
 
-LOCK TABLES `repair` WRITE;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `room`
@@ -264,10 +245,6 @@ CREATE TABLE `room` (
 --
 
 
---
--- Table structure for table `user`
---
-
 DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
@@ -286,13 +263,7 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户信息';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `user`
---
 
-LOCK TABLES `user` WRITE;
-INSERT INTO `user` (`user_id`, `name`, `password`, `college`, `major`, `grade`, `clazz`, `sex`, `contact`, `type`) VALUES (2022141460307,'林浩东','9bf1531c742724ddbb85f44de35f0264','计算机学院','计科',3,6,NULL,'12345678901','学生'),(2022141460311,'丘俊杰','aa8d62b2587ff43a6ac1acebc2eebfdc','计算机学院','计科',3,6,NULL,'12345678901','系统管理员');
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -303,4 +274,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-25 14:59:34
+-- Dump completed on 2025-06-26 15:08:04

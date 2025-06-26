@@ -1,6 +1,8 @@
 package com.scu.accommodationmanagement.service.impl;
 
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.context.AnalysisContext;
+import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.read.listener.PageReadListener;
 import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.service.FileService;
@@ -34,26 +36,47 @@ public class FileServiceImpl implements FileService {
         return storeFile(file, Paths.get(fileUploadPath, "image").toString());
     }
 
-    //TODO: 采用列名解析，而不是索引
     @Override
     public List<User> parseUserExcel(MultipartFile file) throws IOException {
         List<User> users = new ArrayList<>();
 
-        EasyExcel.read(file.getInputStream(), UserExcelData.class,
-                        new PageReadListener<UserExcelData>(dataList -> {
-                            for (UserExcelData data : dataList) {
-                                User user = new User();
-                                user.setUserId(data.getUserId());
-                                user.setName(data.getName());
-                                user.setCollege(data.getCollege());
-                                user.setMajor(data.getMajor());
-                                user.setGrade(data.getGrade());
-                                user.setClazz(data.getClazz());
-                                user.setSex(data.getSex());
-                                user.setContact(data.getContact());
-                                users.add(user);
-                            }
-                        }))
+        // 读取标题行获取列名映射
+        Map<String, Integer> headerMap = new HashMap<>();
+        try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
+            Sheet sheet = workbook.getSheetAt(0);
+            Row headerRow = sheet.getRow(0);
+            headerRow.forEach(cell -> headerMap.put(cell.getStringCellValue(), cell.getColumnIndex()));
+        }
+
+        // 检查必要列是否存在
+        String[] requiredColumns = {"学号", "姓名"};
+        for (String col : requiredColumns) {
+            if (!headerMap.containsKey(col)) {
+                throw new IOException("缺少必要列: " + col);
+            }
+        }
+
+        // 使用列名映射解析数据
+        EasyExcel.read(file.getInputStream())
+                .head(UserExcelData.class)
+                .registerReadListener(new AnalysisEventListener<UserExcelData>() {
+                    @Override
+                    public void invoke(UserExcelData data, AnalysisContext context) {
+                        User user = new User();
+                        user.setUserId(data.getUserId());
+                        user.setName(data.getName());
+                        user.setCollege(data.getCollege());
+                        user.setMajor(data.getMajor());
+                        user.setGrade(data.getGrade());
+                        user.setClazz(data.getClazz());
+                        user.setSex(data.getSex());
+                        user.setContact(data.getContact());
+                        users.add(user);
+                    }
+
+                    @Override
+                    public void doAfterAllAnalysed(AnalysisContext context) {}
+                })
                 .sheet()
                 .headRowNumber(1) // 跳过标题行
                 .doRead();
