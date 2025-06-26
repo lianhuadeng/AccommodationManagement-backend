@@ -35,8 +35,8 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
     public PageDTO<Application> pageList(String studentId, String applicationType, String status, LocalDateTime startTime, LocalDateTime endTime, Integer pageNum, Integer pageSize) {
         PageDTO<Application> pageDTO = new PageDTO<>();
         PageHelper.startPage(pageNum, pageSize);
-        List<Application> foundItemList = applicationMapper.pageList(studentId, applicationType, status, startTime, endTime);
-        Page<Application> page = (Page<Application>) foundItemList;
+        List<Application> applicationList = applicationMapper.pageList(studentId, applicationType, status, startTime, endTime);
+        Page<Application> page = (Page<Application>) applicationList;
 
         pageDTO.setTotal(page.getTotal());
         pageDTO.setItems(page.getResult());

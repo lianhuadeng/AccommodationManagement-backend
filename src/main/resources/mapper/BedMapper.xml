@@ -15,4 +15,9 @@
                  INNER JOIN park p ON b.park_id = p.park_id
         WHERE bed.user_id = #{userId}
     </select>
+    <select id="getOccupiedBeds" resultType="java.lang.Integer" parameterType="java.lang.Long">
+        SELECT COUNT(user_id)
+        FROM bed
+        WHERE room_id = #{roomId} AND user_id IS NOT NULL
+    </select>
 </mapper>

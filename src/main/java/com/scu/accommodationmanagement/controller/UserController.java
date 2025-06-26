@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.scu.accommodationmanagement.model.dto.UserInfoDTO;
 import com.scu.accommodationmanagement.model.po.Application;
 import com.scu.accommodationmanagement.model.po.User;
+import com.scu.accommodationmanagement.model.vo.ChangePasswordVO;
 import com.scu.accommodationmanagement.model.vo.LoginVO;
 import com.scu.accommodationmanagement.service.FileService;
 import com.scu.accommodationmanagement.service.IApplicationService;
@@ -68,6 +69,23 @@ public class UserController {
         }
 
         return JsonResponse.failure("账号或密码错误");
+    }
+
+    @PostMapping("/changePassword")
+    public JsonResponse changePassword(@RequestBody ChangePasswordVO changePasswordVO) {
+        User currentUser = getCurrentUser();
+        if (currentUser == null) {
+            return JsonResponse.failure("请先登录！");
+        }
+        if (!Md5Util.getMD5String(changePasswordVO.getOldPassword()).equals(currentUser.getPassword())) {
+            return JsonResponse.failure("旧密码错误！");
+        }
+        if (!changePasswordVO.getNewPassword().equals(changePasswordVO.getConfirmPassword())) {
+            return JsonResponse.failure("两次密码输入不一致！");
+        }
+        currentUser.setPassword(Md5Util.getMD5String(changePasswordVO.getNewPassword()));
+        userService.updateById(currentUser);
+        return JsonResponse.successMessage("密码修改成功！");
     }
 
     @PostMapping("/systemAdmin/addStudent")

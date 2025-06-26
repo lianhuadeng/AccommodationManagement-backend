@@ -123,6 +123,7 @@ CREATE TABLE `disciplinary` (
   `dormitory_id` bigint DEFAULT NULL COMMENT '宿舍管理员id',
   `reason` varchar(200) DEFAULT NULL COMMENT '违纪原因',
   `score` bigint DEFAULT NULL COMMENT '处罚分数',
+  `create_time` datetime DEFAULT (now()) COMMENT '违纪时间',
   PRIMARY KEY (`disciplinary_id`),
   KEY `disciplinary_user_user_id_fk` (`leader_id`),
   KEY `disciplinary_user_user_id_fk_2` (`student_id`),
