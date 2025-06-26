@@ -1,10 +1,13 @@
 package com.scu.accommodationmanagement.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.scu.accommodationmanagement.model.dto.UserInfoDTO;
+import com.scu.accommodationmanagement.model.po.Application;
 import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.model.vo.LoginVO;
 import com.scu.accommodationmanagement.service.FileService;
+import com.scu.accommodationmanagement.service.IApplicationService;
 import com.scu.accommodationmanagement.service.IBedService;
 import com.scu.accommodationmanagement.service.IUserService;
 import com.scu.accommodationmanagement.utils.*;
@@ -38,6 +41,7 @@ public class UserController {
 
     @Autowired
     private IBedService bedService;
+
     @Autowired
     private FileService fileService;
 
@@ -211,4 +215,36 @@ public class UserController {
             return JsonResponse.failure("导入失败: " + e.getMessage());
         }
     }
+
+    //TODO: 待测试
+    @GetMapping("/maintenanceList")
+    public JsonResponse getMaintenanceList(){
+        User currentUser = getCurrentUser();
+        if (currentUser.getType().equals("学生") || currentUser.getType().equals("教师")){
+            return JsonResponse.failure("无获取权限！");
+        }
+        List<User> users = userService.list(new QueryWrapper<User>().eq("type", "维修管理员"));
+        return JsonResponse.success(users);
+    }
+    //TODO: 待测试
+    @GetMapping("/dormitoryList")
+    public JsonResponse getDormitoryList(){
+        User currentUser = getCurrentUser();
+        if (currentUser.getType().equals("学生") || currentUser.getType().equals("教师")){
+            return JsonResponse.failure("无获取权限！");
+        }
+        List<User> users = userService.list(new QueryWrapper<User>().eq("type", "宿舍管理员"));
+        return JsonResponse.success(users);
+    }
+    //TODO: 待测试
+    @GetMapping("/leaderList")
+    public JsonResponse getLeaderList(){
+        User currentUser = getCurrentUser();
+        if (currentUser.getType().equals("学生") || currentUser.getType().equals("教师")){
+            return JsonResponse.failure("无获取权限！");
+        }
+        List<User> users = userService.list(new QueryWrapper<User>().eq("type", "分管领导"));
+        return JsonResponse.success(users);
+    }
+
 }

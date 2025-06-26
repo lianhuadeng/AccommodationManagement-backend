@@ -6,9 +6,9 @@
         SELECT * FROM application
         <where>
             is_deleted = 0
-            <!-- 学生ID匹配 -->
-            <if test="studentId != null and studentId != ''">
-                AND student_id = #{studentId}
+            <!-- 申请人ID匹配 -->
+            <if test="applierId != null and applierId != ''">
+                AND applier_id = #{studentId}
             </if>
 
             <!-- 申请类型匹配 -->
@@ -39,14 +39,22 @@
     <select id="myApplication" resultType="com.scu.accommodationmanagement.model.po.Application">
         SELECT *
         FROM application
-        WHERE student_id = #{userId} and is_deleted = 0
+        WHERE applier_id = #{userId} and is_deleted = 0
         ORDER BY application_time DESC
     </select>
     <select id="getLatestByApplierId" resultType="com.scu.accommodationmanagement.model.po.Application">
         SELECT *
         FROM application
-        WHERE student_id = #{userId} and is_deleted = 0
+        WHERE applier_id = #{userId} and is_deleted = 0
         ORDER BY application_time DESC
         LIMIT 1
+    </select>
+    <select id="getByTargetBed" resultType="com.scu.accommodationmanagement.model.po.Application"
+            parameterType="java.lang.Long">
+        select *
+        from application
+        where target_bed = #{targetBed} and is_deleted = 0 and (status = '已处理' or status = '待处理')
+        order by application_time desc
+        limit 1
     </select>
 </mapper>

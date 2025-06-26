@@ -1,5 +1,6 @@
 package com.scu.accommodationmanagement.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.scu.accommodationmanagement.model.po.Bed;
 import com.scu.accommodationmanagement.mapper.BedMapper;
 import com.scu.accommodationmanagement.service.IBedService;
@@ -22,5 +23,10 @@ public class BedServiceImpl extends ServiceImpl<BedMapper, Bed> implements IBedS
     @Override
     public String getLocationByUserId(Long userId) {
         return bedMapper.getLocationByUserId(userId);
+    }
+
+    @Override
+    public Bed getByUserId(Long applierId) {
+        return bedMapper.selectOne(new QueryWrapper<Bed>().eq("user_id", applierId));
     }
 }

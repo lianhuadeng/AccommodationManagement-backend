@@ -1,12 +1,15 @@
 package com.scu.accommodationmanagement.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.scu.accommodationmanagement.mapper.BedMapper;
 import com.scu.accommodationmanagement.model.dto.PageDTO;
 import com.scu.accommodationmanagement.model.po.Application;
 import com.scu.accommodationmanagement.mapper.ApplicationMapper;
 import com.scu.accommodationmanagement.service.IApplicationService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.scu.accommodationmanagement.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,8 @@ import java.util.List;
 public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Application> implements IApplicationService {
     @Autowired
     private ApplicationMapper applicationMapper;
+    @Autowired
+    private BedMapper bedMapper;
 
     @Override
     public PageDTO<Application> pageList(String studentId, String applicationType, String status, LocalDateTime startTime, LocalDateTime endTime, Integer pageNum, Integer pageSize) {
@@ -47,5 +52,12 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
     public Application getLatestByApplierId(Long userId) {
         return applicationMapper.getLatestByApplierId(userId);
     }
+
+    @Override
+    public Application getByTargetBed(Long targetBed) {
+        return applicationMapper.getByTargetBed(targetBed);
+    }
+
+
 
 }

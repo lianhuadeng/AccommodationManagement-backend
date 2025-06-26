@@ -22,4 +22,7 @@ public interface IApplicationService extends IService<Application> {
     List<Application> myApplication(Long userId);
 
     Application getLatestByApplierId(Long userId);
+
+    Application getByTargetBed(Long targetBed);
+
 }

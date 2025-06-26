@@ -108,5 +108,6 @@ public class Application implements Serializable {
      */
     private String newAddress;
 
+    private String opinion;
 
 }

@@ -21,4 +21,6 @@ public interface ApplicationMapper extends BaseMapper<Application> {
     List<Application> myApplication(Long userId);
 
     Application getLatestByApplierId(Long userId);
+
+    Application getByTargetBed(Long targetBed);
 }

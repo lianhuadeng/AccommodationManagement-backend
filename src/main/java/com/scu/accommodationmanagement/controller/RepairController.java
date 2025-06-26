@@ -2,6 +2,7 @@ package com.scu.accommodationmanagement.controller;
 
 
 import com.scu.accommodationmanagement.model.po.Repair;
+import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.service.FileService;
 import com.scu.accommodationmanagement.service.IRepairService;
 import com.scu.accommodationmanagement.utils.CurrentUserUtil;
@@ -87,5 +88,20 @@ public class RepairController {
         }
     }
 
+    // 分配维修
+    //TODO: 待测试
+    @PostMapping("/allocate")
+    public JsonResponse allocate(@RequestParam Long repairId, @RequestParam Long maintenanceId) {
+        User user = CurrentUserUtil.getCurrentUser();
+        if (!user.getType().equals("宿舍管理员")){
+            return JsonResponse.failure("权限不足");
+        }
+        Repair repair = repairService.getById(repairId);
+        repair.setDormitoryId(user.getUserId());
+        repair.setMaintenanceId(maintenanceId);
+        repair.setStatus("待处理");
+        repairService.updateById(repair);
+        return JsonResponse.successMessage("分配完成");
+    }
 
 }
