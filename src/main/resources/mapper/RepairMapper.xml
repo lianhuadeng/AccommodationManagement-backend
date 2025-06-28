@@ -27,4 +27,12 @@
           and dormitory_id = #{userId}
         ORDER BY apply_time
     </select>
+    <select id="getByStudentId" resultType="com.scu.accommodationmanagement.model.po.Repair"
+            parameterType="java.lang.Long">
+        SELECT *
+        FROM repair
+        where is_deleted = 0
+          and student_id = #{userId}
+        ORDER BY apply_time
+    </select>
 </mapper>

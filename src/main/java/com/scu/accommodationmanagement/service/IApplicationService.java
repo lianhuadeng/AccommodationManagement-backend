@@ -3,6 +3,7 @@ package com.scu.accommodationmanagement.service;
 import com.scu.accommodationmanagement.model.dto.PageDTO;
 import com.scu.accommodationmanagement.model.po.Application;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.scu.accommodationmanagement.utils.JsonResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,4 +27,6 @@ public interface IApplicationService extends IService<Application> {
     List<Application> userApplications(Long userId, String status);
 
     List<Application> adminApplications(Long userId, String status);
+
+    List<Application> getByApplierId(Long userId);
 }

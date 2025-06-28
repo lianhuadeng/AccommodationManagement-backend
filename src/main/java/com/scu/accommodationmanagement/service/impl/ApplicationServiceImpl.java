@@ -63,5 +63,10 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
         return applicationMapper.selectList(new QueryWrapper<Application>().eq("dormitory_id", userId).eq("status", status).eq("is_deleted", 0));
     }
 
+    @Override
+    public List<Application> getByApplierId(Long userId) {
+        return applicationMapper.selectList(new QueryWrapper<Application>().eq("applier_id", userId));
+    }
+
 
 }

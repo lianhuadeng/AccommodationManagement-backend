@@ -71,6 +71,17 @@ public class UserController {
         return JsonResponse.failure("账号或密码错误");
     }
 
+    @PostMapping("/updateContact")
+    public JsonResponse updateContact(@RequestParam String contact) {
+        User currentUser = getCurrentUser();
+        if (currentUser == null) {
+            return JsonResponse.failure("请先登录！");
+        }
+        currentUser.setContact(contact);
+        userService.updateById(currentUser);
+        return JsonResponse.successMessage("联系方式修改成功！");
+    }
+
     @PostMapping("/changePassword")
     public JsonResponse changePassword(@RequestBody ChangePasswordVO changePasswordVO) {
         User currentUser = getCurrentUser();
@@ -266,6 +277,13 @@ public class UserController {
         return JsonResponse.success(users);
     }
 
+    @PostMapping("/logout")
+    public JsonResponse logout(@RequestParam String token){
+        ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+        //删除redis中对应的token
+        operations.getOperations().delete(token);
+        return JsonResponse.success("退出成功！");
+    }
 
 
 

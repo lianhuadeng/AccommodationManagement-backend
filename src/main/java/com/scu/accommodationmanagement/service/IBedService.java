@@ -24,4 +24,5 @@ public interface IBedService extends IService<Bed> {
 
     void batchAllocateBeds(Map<String, List<User>> groupedStudents, Building building);
 
+    String getLocationByBedId(Long targetBed);
 }

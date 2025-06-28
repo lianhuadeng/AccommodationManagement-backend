@@ -1,12 +1,14 @@
 package com.scu.accommodationmanagement.controller;
 
 
+import com.scu.accommodationmanagement.model.dto.MyRepairDTO;
 import com.scu.accommodationmanagement.model.po.Repair;
 import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.service.FileService;
 import com.scu.accommodationmanagement.service.IRepairService;
 import com.scu.accommodationmanagement.service.IUserService;
 import com.scu.accommodationmanagement.utils.CurrentUserUtil;
+import com.scu.accommodationmanagement.utils.DateTimeConverterUtil;
 import com.scu.accommodationmanagement.utils.ImageCompressUtil;
 import com.scu.accommodationmanagement.utils.JsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -132,4 +136,24 @@ public class RepairController {
         return JsonResponse.successMessage("分配完成");
     }
 
+    @GetMapping("/myRepair")
+    public JsonResponse myRepair() {
+        User user = CurrentUserUtil.getCurrentUser();
+        List<Repair> repairs = repairService.getByStudentId(user.getUserId());
+        List<MyRepairDTO> myRepairDTOList = new ArrayList<>();
+        for (Repair repair : repairs) {
+            MyRepairDTO myRepairDTO = new MyRepairDTO();
+            myRepairDTO.setRepairId(repair.getRepairId());
+            myRepairDTO.setRepairItem(repair.getRepairItem());
+            myRepairDTO.setContent(repair.getContent());
+            myRepairDTO.setApplyTime(DateTimeConverterUtil.convertToChineseDateTime(repair.getApplyTime()));
+            myRepairDTO.setStatus(repair.getStatus());
+            myRepairDTO.setLocation(repair.getLocation());
+            myRepairDTO.setPictureUrl(repair.getPictureUrl());
+            if (!repair.getStatus().equals("待分配"))
+                myRepairDTO.setMaintainerName(userService.getById(repair.getMaintenanceId()).getName());
+            myRepairDTOList.add(myRepairDTO);
+        }
+        return JsonResponse.success(myRepairDTOList);
+    }
 }

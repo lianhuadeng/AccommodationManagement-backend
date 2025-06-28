@@ -37,4 +37,9 @@ public class RepairServiceImpl extends ServiceImpl<RepairMapper, Repair> impleme
     public List<Repair> dormitoryAdminRepairs(Long userId, String status) {
         return repairMapper.dormitoryAdminRepairs(userId, status);
     }
+
+    @Override
+    public List<Repair> getByStudentId(Long userId) {
+        return repairMapper.getByStudentId(userId);
+    }
 }

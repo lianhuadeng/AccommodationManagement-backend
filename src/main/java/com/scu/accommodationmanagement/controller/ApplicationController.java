@@ -1,6 +1,7 @@
 package com.scu.accommodationmanagement.controller;
 
 
+import com.scu.accommodationmanagement.model.dto.MyApplicationDTO;
 import com.scu.accommodationmanagement.model.dto.PageDTO;
 import com.scu.accommodationmanagement.model.po.Application;
 import com.scu.accommodationmanagement.model.po.Bed;
@@ -8,11 +9,14 @@ import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.service.IApplicationService;
 import com.scu.accommodationmanagement.service.IBedService;
 import com.scu.accommodationmanagement.utils.CurrentUserUtil;
+import com.scu.accommodationmanagement.utils.DateTimeConverterUtil;
 import com.scu.accommodationmanagement.utils.JsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -187,4 +191,25 @@ public class ApplicationController {
         return JsonResponse.success("处理成功");
     }
 
+    @GetMapping("/myApplication")
+    public JsonResponse myApplication() {
+        User user = CurrentUserUtil.getCurrentUser();
+        List<Application> byApplierId = applicationService.getByApplierId(user.getUserId());
+        List<MyApplicationDTO> myApplications = new ArrayList<>();
+        for (Application application : byApplierId) {
+            if (application.getIsDeleted()) continue;
+            MyApplicationDTO tmp = new MyApplicationDTO();
+            tmp.setApplicationId(application.getApplicationId());
+            tmp.setApplicationType(application.getApplicationType());
+            tmp.setApplicationTime(DateTimeConverterUtil.convertToChineseDateTime(application.getApplicationTime()));
+            tmp.setStatus(application.getStatus());
+            tmp.setRemark(application.getRemark());
+            tmp.setOpinion(application.getOpinion());
+            if (!application.getApplicationType().equals("校外住宿"))
+                tmp.setTargetLocation(bedService.getLocationByBedId(application.getTargetBed()));
+            else tmp.setTargetLocation(application.getNewAddress());
+            myApplications.add(tmp);
+        }
+        return JsonResponse.success(myApplications);
+    }
 }

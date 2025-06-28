@@ -18,4 +18,6 @@ public interface BedMapper extends BaseMapper<Bed> {
 
 
     Integer getOccupiedBeds(Long roomId);
+
+    String getLocationByBedId(Long targetBed);
 }
