@@ -70,12 +70,14 @@ public class BedServiceImpl extends ServiceImpl<BedMapper, Bed> implements IBedS
                 User student = students.get(studentIndex++);
 
                 // 创建床位分配记录
-                // TODO: 床位用户ID修改
-                Bed bed = bedMapper.selectById(room.getRoomId()*100 + i);
-                bed.setRoomId(room.getRoomId());
+                Bed bed = bedMapper.selectById(room.getRoomId() * 100 + i + 1);
                 bed.setUserId(student.getUserId());
 
-                bedMapper.updateById(bed);
+                try {
+                    bedMapper.updateById(bed);
+                } catch (Exception e) {
+                    throw new RuntimeException("学号为：" + student.getUserId() + " 的学生已经安排过宿舍");
+                }
             }
 
             if (studentIndex >= students.size()) break;

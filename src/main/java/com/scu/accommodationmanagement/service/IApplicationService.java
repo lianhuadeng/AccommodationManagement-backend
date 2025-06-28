@@ -17,7 +17,7 @@ import java.util.List;
  */
 public interface IApplicationService extends IService<Application> {
 
-    PageDTO<Application> pageList(String studentId, String applicationType, String status, LocalDateTime startTime, LocalDateTime endTime, Integer pageNum, Integer pageSize);
+    PageDTO<Application> pageList(Long studentId, String applicationType, String status, LocalDateTime startTime, LocalDateTime endTime, Integer pageNum, Integer pageSize);
 
     Application getLatestByApplierId(Long userId);
 

@@ -11,12 +11,20 @@
           and is_deleted = 0
         ORDER BY apply_time
     </select>
-    <select id="adminRepairs" resultType="com.scu.accommodationmanagement.model.po.Repair">
+    <select id="maintenanceAdminRepairs" resultType="com.scu.accommodationmanagement.model.po.Repair">
         SELECT *
         FROM repair
         where status = #{status}
           and is_deleted = 0
           and maintenance_id = #{userId}
+        ORDER BY apply_time
+    </select>
+    <select id="dormitoryAdminRepairs" resultType="com.scu.accommodationmanagement.model.po.Repair">
+        SELECT *
+        FROM repair
+        where status = #{status}
+          and is_deleted = 0
+          and dormitory_id = #{userId}
         ORDER BY apply_time
     </select>
 </mapper>

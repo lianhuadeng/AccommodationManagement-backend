@@ -5,6 +5,7 @@ import com.scu.accommodationmanagement.model.po.Repair;
 import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.service.FileService;
 import com.scu.accommodationmanagement.service.IRepairService;
+import com.scu.accommodationmanagement.service.IUserService;
 import com.scu.accommodationmanagement.utils.CurrentUserUtil;
 import com.scu.accommodationmanagement.utils.ImageCompressUtil;
 import com.scu.accommodationmanagement.utils.JsonResponse;
@@ -28,6 +29,8 @@ import java.util.Map;
 public class RepairController {
     @Autowired
     private IRepairService repairService;
+    @Autowired
+    private IUserService userService;
 
     @Autowired
     private FileService fileService;
@@ -36,6 +39,7 @@ public class RepairController {
     @PostMapping("/add")
     public JsonResponse add(@RequestBody Repair repair) {
         repair.setStudentId(CurrentUserUtil.getCurrentUser().getUserId());
+        repair.setDormitoryId(userService.getDormitoryAdminIdByUserId(CurrentUserUtil.getCurrentUser().getUserId()));
         repair.setStatus("待分配");
         repairService.save(repair);
         return JsonResponse.successMessage("申请成功");
@@ -81,15 +85,24 @@ public class RepairController {
 
     // 维修管理员查看需要自己处理的申请
     //TODO:待测试
-    @GetMapping("/adminRepairs")
-    public JsonResponse adminRepairs(@RequestParam String status) {
+    @GetMapping("/maintenanceAdminRepairs")
+    public JsonResponse maintenanceAdminRepairs(@RequestParam String status) {
         User user = CurrentUserUtil.getCurrentUser();
         if (!user.getType().equals("维修管理员")){
             return JsonResponse.failure("权限不足");
         }
-        return JsonResponse.success(repairService.adminRepairs(user.getUserId(), status));
+        return JsonResponse.success(repairService.maintenanceAdminRepairs(user.getUserId(), status));
     }
 
+    //TODO:待测试
+    @PostMapping("/dormitoryAdminRepairs")
+    public JsonResponse dormitoryAdminRepairs(@RequestParam String status) {
+        User user = CurrentUserUtil.getCurrentUser();
+        if (!user.getType().equals("宿舍管理员")){
+            return JsonResponse.failure("权限不足");
+        }
+        return JsonResponse.success(repairService.dormitoryAdminRepairs(user.getUserId(), status));
+    }
 
     @PostMapping("/uploadImage")
     public JsonResponse uploadImage(@RequestParam MultipartFile file){

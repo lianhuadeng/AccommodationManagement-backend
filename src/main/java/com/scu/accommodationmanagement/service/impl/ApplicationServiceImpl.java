@@ -32,7 +32,7 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
     private BedMapper bedMapper;
 
     @Override
-    public PageDTO<Application> pageList(String studentId, String applicationType, String status, LocalDateTime startTime, LocalDateTime endTime, Integer pageNum, Integer pageSize) {
+    public PageDTO<Application> pageList(Long studentId, String applicationType, String status, LocalDateTime startTime, LocalDateTime endTime, Integer pageNum, Integer pageSize) {
         PageDTO<Application> pageDTO = new PageDTO<>();
         PageHelper.startPage(pageNum, pageSize);
         List<Application> applicationList = applicationMapper.pageList(studentId, applicationType, status, startTime, endTime);

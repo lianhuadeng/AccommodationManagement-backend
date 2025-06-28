@@ -2,4 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.scu.accommodationmanagement.mapper.HygieneCheckMapper">
 
+    <select id="getPageList" resultType="com.scu.accommodationmanagement.model.po.HygieneCheck">
+        SELECT * FROM hygiene_check
+        <where>
+            <!-- 房间号匹配 -->
+            <if test="roomId != null and roomId != ''">
+                AND room_id = #{roomId}
+            </if>
+            <!-- 扣分原因匹配 -->
+            <if test="reason != null and reason != ''">
+                AND reason like CONCAT('%', #{reason}, '%')
+            </if>
+
+            <!-- 时间范围处理 -->
+            <if test="startTime != null and endTime != null">
+                AND check_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+            <if test="startTime != null and endTime == null">
+                AND check_time >= #{startTime}
+            </if>
+            <if test="startTime == null and endTime != null">
+                AND check_time &lt;= #{endTime}
+            </if>
+        </where>
+        ORDER BY check_time DESC
+    </select>
 </mapper>

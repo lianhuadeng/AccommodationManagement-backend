@@ -17,4 +17,5 @@ import java.util.Map;
 public interface UserMapper extends BaseMapper<User> {
 
 
+    Long getDormitoryAdminIdByUserId(Long userId);
 }

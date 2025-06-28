@@ -1,17 +1,17 @@
 package com.scu.accommodationmanagement.controller;
 
 
+import com.github.pagehelper.Page;
+import com.scu.accommodationmanagement.model.dto.PageDTO;
 import com.scu.accommodationmanagement.model.po.HygieneCheck;
 import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.service.IHygieneCheckService;
 import com.scu.accommodationmanagement.utils.CurrentUserUtil;
 import com.scu.accommodationmanagement.utils.JsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -39,5 +39,25 @@ public class HygieneCheckController {
         return JsonResponse.successMessage("添加成功");
     }
 
+    //查看房间卫生检查统计
+    //TODO: 待实现
+//    @GetMapping("/statics")
+//    public JsonResponse getStatics(){
+//
+//    }
+
+    //查看卫生检查结果
+    //TODO: 待测试
+    @GetMapping("/pageList")
+    public JsonResponse<PageDTO<HygieneCheck>> getPageList(
+            Integer pageNum,
+            Integer pageSize,
+            @RequestParam(required = false) Long roomId,
+            @RequestParam(required = false) String reason,
+            @RequestParam(required = false) LocalDateTime startTime,
+            @RequestParam(required = false) LocalDateTime endTime
+    ){
+        return JsonResponse.success(hygieneCheckService.getPageList(pageNum, pageSize, roomId, reason, startTime, endTime));
+    }
 
 }

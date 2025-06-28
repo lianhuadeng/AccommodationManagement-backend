@@ -3,4 +3,14 @@
 <mapper namespace="com.scu.accommodationmanagement.mapper.UserMapper">
 
 
+    <select id="getDormitoryAdminIdByUserId" resultType="java.lang.Long" parameterType="java.lang.Long">
+        SELECT
+            bld.dormitory_id
+        FROM
+            bed b
+                INNER JOIN room r ON b.room_id = r.room_id
+                INNER JOIN building bld ON r.building_id = bld.building_id
+        WHERE
+            b.user_id = #{userId}
+    </select>
 </mapper>

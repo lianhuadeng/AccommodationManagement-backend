@@ -41,7 +41,6 @@ public class BedController {
     private IBuildingService buildingService;
 
     // 批量宿舍操作
-    //TODO: 待测试
     @PostMapping("/multiSchedule")
     public JsonResponse multiSchedule(
             @RequestParam("file") MultipartFile file,

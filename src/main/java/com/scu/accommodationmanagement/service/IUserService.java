@@ -14,4 +14,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IUserService extends IService<User> {
 
     void addStudent(User user);
+
+    Long getDormitoryAdminIdByUserId(Long userId);
 }

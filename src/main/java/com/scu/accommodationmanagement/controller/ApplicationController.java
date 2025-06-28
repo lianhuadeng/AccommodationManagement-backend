@@ -92,7 +92,7 @@ public class ApplicationController {
     public JsonResponse<PageDTO<Application>> pageList(
             Integer pageNum,
             Integer pageSize,
-            @RequestParam(required = false) String studentId,
+            @RequestParam(required = false) Long studentId,
             @RequestParam(required = false) String applicationType,
             @RequestParam(required = false) String status,
             @RequestParam(required = false) LocalDateTime startTime,
@@ -114,6 +114,7 @@ public class ApplicationController {
         return JsonResponse.success(applicationService.userApplications(user.getUserId(), status));
     }
 
+    //TODO:待测试
     @GetMapping("/adminApplications")
     public JsonResponse adminApplications(@RequestParam String status) {
         User user = CurrentUserUtil.getCurrentUser();

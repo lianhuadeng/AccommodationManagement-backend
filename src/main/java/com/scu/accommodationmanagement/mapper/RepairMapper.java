@@ -17,5 +17,7 @@ public interface RepairMapper extends BaseMapper<Repair> {
 
     List<Repair> userRepairs(Long userId, String status);
 
-    List<Repair> adminRepairs(Long userId, String status);
+    List<Repair> maintenanceAdminRepairs(Long userId, String status);
+
+    List<Repair> dormitoryAdminRepairs(Long userId, String status);
 }

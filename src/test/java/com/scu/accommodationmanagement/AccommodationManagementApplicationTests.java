@@ -18,5 +18,4 @@ class AccommodationManagementApplicationTests {
         defaultPassword = defaultPassword.substring(Math.max(0, defaultPassword.length() - 6));
         System.out.println(Md5Util.getMD5String(defaultPassword));
     }
-
 }

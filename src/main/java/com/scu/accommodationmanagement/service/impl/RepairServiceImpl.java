@@ -29,7 +29,12 @@ public class RepairServiceImpl extends ServiceImpl<RepairMapper, Repair> impleme
     }
 
     @Override
-    public List<Repair> adminRepairs(Long userId, String status) {
-        return repairMapper.adminRepairs(userId, status);
+    public List<Repair> maintenanceAdminRepairs(Long userId, String status) {
+        return repairMapper.maintenanceAdminRepairs(userId, status);
+    }
+
+    @Override
+    public List<Repair> dormitoryAdminRepairs(Long userId, String status) {
+        return repairMapper.dormitoryAdminRepairs(userId, status);
     }
 }

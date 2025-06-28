@@ -24,4 +24,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public void addStudent(User user) {
         userMapper.insert(user);
     }
+
+    @Override
+    public Long getDormitoryAdminIdByUserId(Long userId) {
+        return userMapper.getDormitoryAdminIdByUserId(userId);
+    }
 }
