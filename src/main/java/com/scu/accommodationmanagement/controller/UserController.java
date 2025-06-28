@@ -15,6 +15,7 @@ import com.scu.accommodationmanagement.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -88,6 +89,17 @@ public class UserController {
         if (currentUser == null) {
             return JsonResponse.failure("请先登录！");
         }
+        //验证参数是否为空
+        if (!StringUtils.hasLength(changePasswordVO.getOldPassword()) || !StringUtils.hasLength(changePasswordVO.getNewPassword()) || !StringUtils.hasLength(changePasswordVO.getConfirmPassword())) {
+            return JsonResponse.failure("缺少必要参数");
+        }
+
+        // 验证密码长度和复杂性
+        if (changePasswordVO.getNewPassword().length() < 6 || changePasswordVO.getNewPassword().length() > 20
+                || !changePasswordVO.getNewPassword().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$")) {
+            return JsonResponse.failure("密码必须为6-20个字符，并包含大小写字母和数字");
+        }
+
         if (!Md5Util.getMD5String(changePasswordVO.getOldPassword()).equals(currentUser.getPassword())) {
             return JsonResponse.failure("旧密码错误！");
         }
