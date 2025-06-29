@@ -1,5 +1,7 @@
 package com.scu.accommodationmanagement.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.scu.accommodationmanagement.model.po.HygieneCheck;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -16,5 +18,6 @@ import java.util.List;
  */
 public interface HygieneCheckMapper extends BaseMapper<HygieneCheck> {
 
-    List<HygieneCheck> getPageList(Long roomId, String reason, LocalDateTime startTime, LocalDateTime endTime);
+    IPage<HygieneCheck> pageList(Page<HygieneCheck> page, Long roomId, String reason, LocalDateTime startTime, LocalDateTime endTime);
+
 }

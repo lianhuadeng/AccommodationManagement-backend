@@ -1,5 +1,7 @@
 package com.scu.accommodationmanagement.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.scu.accommodationmanagement.model.po.Bed;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -21,5 +23,6 @@ public interface BedMapper extends BaseMapper<Bed> {
 
     String getLocationByBedId(Long targetBed);
 
-    List<Bed> pageList(Long parkId, Long buildingId, Long floor, Long roomId);
+
+    IPage<Bed> pageList(Page<Bed> page, Long parkId, Long buildingId, Long floor, Long roomId);
 }

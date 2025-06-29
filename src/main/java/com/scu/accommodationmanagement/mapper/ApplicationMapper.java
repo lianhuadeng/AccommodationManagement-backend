@@ -1,7 +1,8 @@
 package com.scu.accommodationmanagement.mapper;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.github.pagehelper.Page;
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.scu.accommodationmanagement.model.po.Application;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 

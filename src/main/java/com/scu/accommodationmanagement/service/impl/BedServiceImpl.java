@@ -2,8 +2,8 @@ package com.scu.accommodationmanagement.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.scu.accommodationmanagement.mapper.RoomMapper;
 import com.scu.accommodationmanagement.model.dto.PageDTO;
 import com.scu.accommodationmanagement.model.po.*;
@@ -61,14 +61,17 @@ public class BedServiceImpl extends ServiceImpl<BedMapper, Bed> implements IBedS
 
     @Override
     public PageDTO<Bed> pageList(Integer pageNum, Integer pageSize, Long parkId, Long buildingId, Long floor, Long roomId) {
-        PageDTO<Bed> pageDTO = new PageDTO<>();
-        PageHelper.startPage(pageNum, pageSize);
-        List<Bed> bedList = bedMapper.pageList(parkId, buildingId, floor, roomId);
-        Page<Bed> page = (Page<Bed>) bedList;
+        // 1. 构造 MP 分页对象
+        Page<Bed> page = new Page<>(pageNum, pageSize);
 
-        pageDTO.setTotal(page.getTotal());
-        pageDTO.setItems(page.getResult());
-        return pageDTO;
+        // 2. 调用自定义的 Mapper 方法
+        IPage<Bed> resultPage = bedMapper.pageList(page, parkId, buildingId, floor, roomId);
+
+        // 3. 封装 DTO 并返回
+        PageDTO<Application> dto = new PageDTO<>();
+        dto.setTotal(resultPage.getTotal());
+        dto.setItems(resultPage.getRecords());
+        return dto;
     }
 
 

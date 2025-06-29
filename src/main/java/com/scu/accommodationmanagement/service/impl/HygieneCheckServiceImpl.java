@@ -1,7 +1,7 @@
 package com.scu.accommodationmanagement.service.impl;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.scu.accommodationmanagement.model.dto.PageDTO;
 import com.scu.accommodationmanagement.model.po.HygieneCheck;
 import com.scu.accommodationmanagement.mapper.HygieneCheckMapper;
@@ -28,13 +28,16 @@ public class HygieneCheckServiceImpl extends ServiceImpl<HygieneCheckMapper, Hyg
 
     @Override
     public PageDTO<HygieneCheck> getPageList(Integer pageNum, Integer pageSize, Long roomId, String reason, LocalDateTime startTime, LocalDateTime endTime) {
-        PageDTO<HygieneCheck> pageDTO = new PageDTO<>();
-        PageHelper.startPage(pageNum, pageSize);
-        List<HygieneCheck> hygieneCheckList = hygieneCheckMapper.getPageList(roomId, reason, startTime, endTime);
-        Page<HygieneCheck> page = (Page<HygieneCheck>) hygieneCheckList;
+        // 1. 构造 MP 分页对象
+        Page<HygieneCheck> page = new Page<>(pageNum, pageSize);
 
-        pageDTO.setTotal(page.getTotal());
-        pageDTO.setItems(page.getResult());
-        return pageDTO;
+        // 2. 调用自定义的 Mapper 方法
+        IPage<HygieneCheck> resultPage = hygieneCheckMapper.pageList(page, roomId, reason, startTime, endTime);
+
+        // 3. 封装 DTO 并返回
+        PageDTO<HygieneCheck> dto = new PageDTO<>();
+        dto.setTotal(resultPage.getTotal());
+        dto.setItems(resultPage.getRecords());
+        return dto;
     }
 }

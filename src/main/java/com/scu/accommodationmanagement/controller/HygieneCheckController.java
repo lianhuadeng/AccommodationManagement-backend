@@ -1,7 +1,6 @@
 package com.scu.accommodationmanagement.controller;
 
 
-import com.github.pagehelper.Page;
 import com.scu.accommodationmanagement.model.dto.PageDTO;
 import com.scu.accommodationmanagement.model.po.HygieneCheck;
 import com.scu.accommodationmanagement.model.po.User;
