@@ -182,7 +182,7 @@ public class UserController {
         return JsonResponse.successMessage("设置成功！");
     }
 
-    @PostMapping("/systemAdmin/userPageList")
+    @GetMapping("/systemAdmin/userPageList")
     public JsonResponse<PageDTO<User>> userPageList(
             Integer pageNum,
             Integer pageSize
