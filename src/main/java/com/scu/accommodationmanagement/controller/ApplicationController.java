@@ -103,7 +103,7 @@ public class ApplicationController {
             @RequestParam(required = false) LocalDateTime endTime
             ) {
         User user = CurrentUserUtil.getCurrentUser();
-        if (user.getType().equals("分管领导") || user.getType().equals("系统管理员")){
+        if (!user.getType().equals("分管领导") && ! user.getType().equals("系统管理员")){
             return JsonResponse.failure("无权限查看申请！");
         }
         return JsonResponse.success(applicationService.pageList(studentId, applicationType, status, startTime, endTime, pageNum, pageSize));

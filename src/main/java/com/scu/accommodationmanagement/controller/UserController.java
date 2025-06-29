@@ -113,8 +113,8 @@ public class UserController {
         return JsonResponse.successMessage("密码修改成功！");
     }
 
-    @PostMapping("/systemAdmin/addStudent")
-    public JsonResponse addStudent(@RequestBody User user){
+    @PostMapping("/systemAdmin/addUser")
+    public JsonResponse addUser(@RequestBody User user){
         // 判断是否具有权限
         User currentUser = getCurrentUser();
         if (currentUser == null || !currentUser.getType().equals("系统管理员")) {
@@ -124,29 +124,11 @@ public class UserController {
         if (byId != null) {
             return JsonResponse.failure("学生已存在！");
         }
-        user.setType("学生");
         user.setPassword(Md5Util.getMD5String(user.getUserId().toString()
                 .substring(user.getUserId().toString().length() - 6)));
         userService.addStudent(user);
         return JsonResponse.successMessage("添加成功！");
 
-    }
-
-    @PostMapping("/systemAdmin/addAdmin")
-    public JsonResponse addAdmin(@RequestBody User user, @RequestParam String type){
-        User currentUser = getCurrentUser();
-        if (currentUser == null || !currentUser.getType().equals("系统管理员")) {
-            return JsonResponse.failure("无权限操作！");
-        }
-        User byId = userService.getById(user.getUserId());
-        if (byId != null) {
-            return JsonResponse.failure("用户已存在！");
-        }
-        user.setType(type);
-        user.setPassword(Md5Util.getMD5String(user.getUserId().toString()
-                .substring(user.getUserId().toString().length() - 6)));
-        userService.save(user);
-        return JsonResponse.successMessage("添加成功！");
     }
 
     @GetMapping("/userInfo")
