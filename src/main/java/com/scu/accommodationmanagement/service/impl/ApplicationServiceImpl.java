@@ -1,6 +1,7 @@
 package com.scu.accommodationmanagement.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.scu.accommodationmanagement.mapper.BedMapper;
@@ -9,7 +10,6 @@ import com.scu.accommodationmanagement.model.po.Application;
 import com.scu.accommodationmanagement.mapper.ApplicationMapper;
 import com.scu.accommodationmanagement.service.IApplicationService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.scu.accommodationmanagement.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,14 +33,17 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
 
     @Override
     public PageDTO<Application> pageList(Long studentId, String applicationType, String status, LocalDateTime startTime, LocalDateTime endTime, Integer pageNum, Integer pageSize) {
-        PageDTO<Application> pageDTO = new PageDTO<>();
-        PageHelper.startPage(pageNum, pageSize);
-        List<Application> applicationList = applicationMapper.pageList(studentId, applicationType, status, startTime, endTime);
-        Page<Application> page = (Page<Application>) applicationList;
+        // 1. 构造 MP 分页对象
+        Page<Application> page = new Page<>(pageNum, pageSize);
 
-        pageDTO.setTotal(page.getTotal());
-        pageDTO.setItems(page.getResult());
-        return pageDTO;
+        // 2. 调用自定义的 Mapper 方法
+        IPage<Application> resultPage = applicationMapper.pageList(page, studentId, applicationType, status, startTime, endTime);
+
+        // 3. 封装 DTO 并返回
+        PageDTO<Application> dto = new PageDTO<>();
+        dto.setTotal(resultPage.getTotal());
+        dto.setItems(resultPage.getRecords());
+        return dto;
     }
 
     @Override

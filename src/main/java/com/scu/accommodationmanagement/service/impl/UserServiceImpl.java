@@ -1,7 +1,10 @@
 package com.scu.accommodationmanagement.service.impl;
 
-import com.github.pagehelper.Page;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.scu.accommodationmanagement.model.dto.PageDTO;
 import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.mapper.UserMapper;
@@ -37,13 +40,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public PageDTO<User> userPageList(Integer pageNum, Integer pageSize) {
-        PageDTO<User> pageDTO = new PageDTO<>();
-        PageHelper.startPage(pageNum, pageSize);
-        List<User> userList = userMapper.userPageList();
-        Page<User> page = (Page<User>) userList;
+        Page<User> mpPage = new Page<>(pageNum, pageSize);
+        IPage<User> resultPage = userMapper.selectPage(mpPage, null);
 
-        pageDTO.setTotal(page.getTotal());
-        pageDTO.setItems(page.getResult());
+        PageDTO<User> pageDTO = new PageDTO<>();
+        pageDTO.setTotal(resultPage.getTotal());
+        pageDTO.setItems(resultPage.getRecords());
         return pageDTO;
     }
 }

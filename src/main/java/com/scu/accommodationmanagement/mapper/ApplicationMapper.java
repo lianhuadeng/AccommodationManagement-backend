@@ -1,5 +1,7 @@
 package com.scu.accommodationmanagement.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.github.pagehelper.Page;
 import com.scu.accommodationmanagement.model.po.Application;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -16,11 +18,13 @@ import java.util.List;
  */
 public interface ApplicationMapper extends BaseMapper<Application> {
 
-    List<Application> pageList(Long studentId, String applicationType, String status, LocalDateTime startTime, LocalDateTime endTime);
+
 
     List<Application> myApplication(Long userId, String status);
 
     Application getLatestByApplierId(Long userId);
 
     Application getByTargetBed(Long targetBed);
+
+    IPage<Application> pageList(Page<Application> page, Long studentId, String applicationType, String status, LocalDateTime startTime, LocalDateTime endTime);
 }
