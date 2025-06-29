@@ -7,7 +7,7 @@
         <where>
             is_deleted = 0
             <!-- 申请人ID匹配 -->
-            <if test="applierId != null and applierId != ''">
+            <if test="studentId != null and studentId != ''">
                 AND applier_id = #{studentId}
             </if>
 

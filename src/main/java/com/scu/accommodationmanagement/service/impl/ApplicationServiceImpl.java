@@ -27,8 +27,7 @@ import java.util.List;
 public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Application> implements IApplicationService {
     @Autowired
     private ApplicationMapper applicationMapper;
-    @Autowired
-    private BedMapper bedMapper;
+
 
     @Override
     public PageDTO<Application> pageList(Long studentId, String applicationType, String status, LocalDateTime startTime, LocalDateTime endTime, Integer pageNum, Integer pageSize) {

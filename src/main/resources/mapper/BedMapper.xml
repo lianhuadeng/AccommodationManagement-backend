@@ -33,8 +33,8 @@
                  INNER JOIN park p ON b.park_id = p.park_id
         WHERE bed.bed_id = #{targetBed}
     </select>
-    <select id="pageList" resultType="com.scu.accommodationmanagement.model.po.Bed">
-        SELECT * FROM bed
+    <select id="pageList" resultType="com.scu.accommodationmanagement.model.dto.BedListDTO">
+        SELECT p.park_id, b.building_id, r.floor,r.room_id,bed.bed_id,bed.user_id FROM bed
         INNER JOIN room r ON bed.room_id = r.room_id
         INNER JOIN building b ON r.building_id = b.building_id
         INNER JOIN park p ON b.park_id = p.park_id

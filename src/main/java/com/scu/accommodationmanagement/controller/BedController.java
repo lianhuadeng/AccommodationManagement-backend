@@ -1,14 +1,13 @@
 package com.scu.accommodationmanagement.controller;
 
 
+import com.scu.accommodationmanagement.model.dto.BedListDTO;
 import com.scu.accommodationmanagement.model.dto.PageDTO;
 import com.scu.accommodationmanagement.model.po.Application;
 import com.scu.accommodationmanagement.model.po.Bed;
 import com.scu.accommodationmanagement.model.po.Building;
 import com.scu.accommodationmanagement.model.po.User;
-import com.scu.accommodationmanagement.service.FileService;
-import com.scu.accommodationmanagement.service.IBedService;
-import com.scu.accommodationmanagement.service.IBuildingService;
+import com.scu.accommodationmanagement.service.*;
 import com.scu.accommodationmanagement.utils.JsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +39,10 @@ public class BedController {
     private FileService fileService;
     @Autowired
     private IBuildingService buildingService;
+    @Autowired
+    private IUserService userService;
+    @Autowired
+    private IParkService parkService;
 
     // 批量宿舍操作
     @PostMapping("/multiSchedule")
@@ -83,7 +86,7 @@ public class BedController {
     }
 
     @GetMapping("/pageList")
-    public JsonResponse<PageDTO<Bed>> pageList(
+    public JsonResponse<PageDTO<BedListDTO>> pageList(
             Integer pageNum,
             Integer pageSize,
             @RequestParam(required = false) Long parkId,
@@ -91,7 +94,19 @@ public class BedController {
             @RequestParam(required = false) Long floor,
             @RequestParam(required = false) Long roomId
     ) {
-        return JsonResponse.success(bedService.pageList(pageNum, pageSize, parkId, buildingId, floor, roomId));
+        PageDTO<BedListDTO> bedListDTOPageDTO = bedService.pageList(pageNum, pageSize, parkId, buildingId, floor, roomId);
+        for (BedListDTO bed : bedListDTOPageDTO.getItems()){
+            bed.setParkName(parkService.getById(bed.getParkId()).getName());
+            bed.setBuildingId(bed.getBuildingId()%100);
+            bed.setRoomId(bed.getRoomId()%10000);
+            bed.setBedId(bed.getBedId()%100);
+            if (bed.getUserId() != null){
+                bed.setUserName(userService.getById(bed.getUserId()).getName());
+            }else {
+                bed.setUserName("未分配");
+            }
+        }
+        return JsonResponse.success(bedListDTOPageDTO);
     }
 
 }

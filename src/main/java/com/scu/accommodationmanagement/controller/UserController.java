@@ -124,6 +124,23 @@ public class UserController {
         if (byId != null) {
             return JsonResponse.failure("学生已存在！");
         }
+        // 参数校验
+        if (user.getUserId() == null || user.getName() == null || user.getType() == null ||
+                user.getContact() == null || user.getSex() == null) {
+            return JsonResponse.failure("缺少必要参数");
+        }
+        if (user.getType().equals("学生")){
+            if (user.getCollege() == null || user.getMajor() == null || user.getGrade() == null
+            || user.getClazz() == null) {
+                return JsonResponse.failure("缺少必要参数");
+            }
+        }
+        if (user.getType().equals("教师")){
+            if (user.getCollege() == null || user.getMajor() == null || user.getTitle() == null){
+                return JsonResponse.failure("缺少必要参数");
+            }
+        }
+        // 设置默认密码
         user.setPassword(Md5Util.getMD5String(user.getUserId().toString()
                 .substring(user.getUserId().toString().length() - 6)));
         userService.addStudent(user);
