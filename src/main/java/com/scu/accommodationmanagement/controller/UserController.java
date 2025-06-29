@@ -2,8 +2,10 @@ package com.scu.accommodationmanagement.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.scu.accommodationmanagement.model.dto.PageDTO;
 import com.scu.accommodationmanagement.model.dto.UserInfoDTO;
 import com.scu.accommodationmanagement.model.po.Application;
+import com.scu.accommodationmanagement.model.po.Bed;
 import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.model.vo.ChangePasswordVO;
 import com.scu.accommodationmanagement.model.vo.LoginVO;
@@ -180,16 +182,13 @@ public class UserController {
         return JsonResponse.successMessage("设置成功！");
     }
 
-//    @PostMapping("/systemAdmin/userPageList")
-//    public JsonResponse userPageList(
-//            Integer pageNum,
-//            Integer pageSize,
-//            @RequestParam(required = false) String userId,
-//            @RequestParam(required = false) String sex,
-//            @RequestParam(required = false) String type,
-//    ){
-//
-//    }
+    @PostMapping("/systemAdmin/userPageList")
+    public JsonResponse<PageDTO<User>> userPageList(
+            Integer pageNum,
+            Integer pageSize
+    ){
+        return JsonResponse.success(userService.userPageList(pageNum, pageSize));
+    }
 
     @PostMapping("/systemAdmin/addUserWithExcel")
     public JsonResponse addUserWithExcel(@RequestParam("file") MultipartFile file, @RequestParam String userType) throws IOException {

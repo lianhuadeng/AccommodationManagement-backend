@@ -5,11 +5,7 @@ import com.scu.accommodationmanagement.model.po.Room;
 import com.scu.accommodationmanagement.service.IRoomService;
 import com.scu.accommodationmanagement.utils.JsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -25,6 +21,14 @@ public class RoomController {
     @Autowired
     private IRoomService roomService;
 
+    @GetMapping("/list")
+    public JsonResponse list(
+            @RequestParam(required = false) Long parkId,
+        @RequestParam(required = false) Long buildingId,
+        @RequestParam(required = false) Long floor
+    ) {
+        return JsonResponse.success(roomService.getlist(parkId, buildingId, floor));
+    }
 
 
 }

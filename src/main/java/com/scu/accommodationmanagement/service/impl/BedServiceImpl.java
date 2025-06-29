@@ -2,12 +2,12 @@ package com.scu.accommodationmanagement.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.scu.accommodationmanagement.mapper.RoomMapper;
-import com.scu.accommodationmanagement.model.po.Bed;
+import com.scu.accommodationmanagement.model.dto.PageDTO;
+import com.scu.accommodationmanagement.model.po.*;
 import com.scu.accommodationmanagement.mapper.BedMapper;
-import com.scu.accommodationmanagement.model.po.Building;
-import com.scu.accommodationmanagement.model.po.Room;
-import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.service.IBedService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.scu.accommodationmanagement.service.IRoomService;
@@ -58,6 +58,19 @@ public class BedServiceImpl extends ServiceImpl<BedMapper, Bed> implements IBedS
     public String getLocationByBedId(Long targetBed) {
         return bedMapper.getLocationByBedId(targetBed);
     }
+
+    @Override
+    public PageDTO<Bed> pageList(Integer pageNum, Integer pageSize, Long parkId, Long buildingId, Long floor, Long roomId) {
+        PageDTO<Bed> pageDTO = new PageDTO<>();
+        PageHelper.startPage(pageNum, pageSize);
+        List<Bed> bedList = bedMapper.pageList(parkId, buildingId, floor, roomId);
+        Page<Bed> page = (Page<Bed>) bedList;
+
+        pageDTO.setTotal(page.getTotal());
+        pageDTO.setItems(page.getResult());
+        return pageDTO;
+    }
+
 
     public Integer getOccupiedBeds(Long roomId) {
         return bedMapper.getOccupiedBeds(roomId);

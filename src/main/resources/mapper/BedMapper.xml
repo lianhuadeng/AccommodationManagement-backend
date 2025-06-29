@@ -33,4 +33,26 @@
                  INNER JOIN park p ON b.park_id = p.park_id
         WHERE bed.bed_id = #{targetBed}
     </select>
+    <select id="pageList" resultType="com.scu.accommodationmanagement.model.po.Bed">
+        SELECT * FROM bed
+        INNER JOIN room r ON bed.room_id = r.room_id
+        INNER JOIN building b ON r.building_id = b.building_id
+        INNER JOIN park p ON b.park_id = p.park_id
+        <where>
+            <if test="parkId != null and parkId != ''">
+                p.park_id = #{parkId}
+            </if>
+
+            <if test="buildingId != null and buildingId != ''">
+                AND b.building_id = #{buildingId}
+            </if>
+
+            <if test="floor != null and floor != ''">
+                AND r.floor = #{floor}
+            </if>
+            <if test="roomId != null and roomId != ''">
+                AND r.room_id = #{roomId}
+            </if>
+        </where>
+    </select>
 </mapper>

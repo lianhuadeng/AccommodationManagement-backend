@@ -1,6 +1,9 @@
 package com.scu.accommodationmanagement.controller;
 
 
+import com.scu.accommodationmanagement.model.dto.PageDTO;
+import com.scu.accommodationmanagement.model.po.Application;
+import com.scu.accommodationmanagement.model.po.Bed;
 import com.scu.accommodationmanagement.model.po.Building;
 import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.service.FileService;
@@ -8,14 +11,12 @@ import com.scu.accommodationmanagement.service.IBedService;
 import com.scu.accommodationmanagement.service.IBuildingService;
 import com.scu.accommodationmanagement.utils.JsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -79,6 +80,18 @@ public class BedController {
         } catch (Exception e) {
             return JsonResponse.failure("排宿失败: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/pageList")
+    public JsonResponse<PageDTO<Bed>> pageList(
+            Integer pageNum,
+            Integer pageSize,
+            @RequestParam(required = false) Long parkId,
+            @RequestParam(required = false) Long buildingId,
+            @RequestParam(required = false) Long floor,
+            @RequestParam(required = false) Long roomId
+    ) {
+        return JsonResponse.success(bedService.pageList(pageNum, pageSize, parkId, buildingId, floor, roomId));
     }
 
 }

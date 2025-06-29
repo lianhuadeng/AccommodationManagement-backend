@@ -18,4 +18,6 @@ public interface UserMapper extends BaseMapper<User> {
 
 
     Long getDormitoryAdminIdByUserId(Long userId);
+
+    List<User> userPageList();
 }

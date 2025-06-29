@@ -3,6 +3,8 @@ package com.scu.accommodationmanagement.service;
 import com.scu.accommodationmanagement.model.po.Building;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * 楼栋 服务类
@@ -14,4 +16,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IBuildingService extends IService<Building> {
 
     void add(Long parkId, Integer floorNum, Integer roomNumPerFloor, Integer bedNumPerRoom);
+
+    List<Building> listByParkId(Long parkId);
 }

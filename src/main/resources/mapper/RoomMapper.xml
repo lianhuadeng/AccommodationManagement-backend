@@ -15,4 +15,20 @@
         )
         ORDER BY r.floor ASC
     </select>
+    <select id="getlist" resultType="com.scu.accommodationmanagement.model.po.Room">
+        select * from room r
+        inner join building b on r.building_id = b.building_id
+        inner join park p on b.park_id = p.park_id
+        <where>
+            <if test="parkId!= null">
+                and p.park_id = #{parkId}
+            </if>
+            <if test="buildingId!= null">
+                and b.building_id = #{buildingId}
+            </if>
+            <if test="floor!= null">
+                and r.floor = #{floor}
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -16,4 +16,6 @@ import java.util.List;
 public interface IRoomService extends IService<Room> {
 
     List<Room> getRoomsByBuilding(Long buildingId);
+
+    List<Room> getlist(Long parkId, Long buildingId, Long floor);
 }

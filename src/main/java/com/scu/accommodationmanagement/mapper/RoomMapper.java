@@ -17,4 +17,6 @@ public interface RoomMapper extends BaseMapper<Room> {
 
 
     List<Room> getRoomsByBuilding(Long buildingId);
+
+    List<Room> getlist(Long parkId, Long buildingId, Long floor);
 }

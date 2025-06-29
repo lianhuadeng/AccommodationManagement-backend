@@ -27,4 +27,9 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements IR
     public List<Room> getRoomsByBuilding(Long buildingId) {
         return roomMapper.getRoomsByBuilding(buildingId);
     }
+
+    @Override
+    public List<Room> getlist(Long parkId, Long buildingId, Long floor) {
+        return roomMapper.getlist(parkId, buildingId, floor);
+    }
 }

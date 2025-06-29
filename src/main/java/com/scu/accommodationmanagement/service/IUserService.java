@@ -1,5 +1,6 @@
 package com.scu.accommodationmanagement.service;
 
+import com.scu.accommodationmanagement.model.dto.PageDTO;
 import com.scu.accommodationmanagement.model.po.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -16,4 +17,6 @@ public interface IUserService extends IService<User> {
     void addStudent(User user);
 
     Long getDormitoryAdminIdByUserId(Long userId);
+
+    PageDTO<User> userPageList(Integer pageNum, Integer pageSize);
 }

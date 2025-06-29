@@ -1,5 +1,6 @@
 package com.scu.accommodationmanagement.service;
 
+import com.scu.accommodationmanagement.model.dto.PageDTO;
 import com.scu.accommodationmanagement.model.po.Bed;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.scu.accommodationmanagement.model.po.Building;
@@ -25,4 +26,7 @@ public interface IBedService extends IService<Bed> {
     void batchAllocateBeds(Map<String, List<User>> groupedStudents, Building building);
 
     String getLocationByBedId(Long targetBed);
+
+
+    PageDTO<Bed> pageList(Integer pageNum, Integer pageSize, Long parkId, Long buildingId, Long floor, Long roomId);
 }
