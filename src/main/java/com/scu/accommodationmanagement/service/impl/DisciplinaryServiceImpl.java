@@ -1,7 +1,7 @@
 package com.scu.accommodationmanagement.service.impl;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.scu.accommodationmanagement.model.dto.PageDTO;
 import com.scu.accommodationmanagement.model.po.Disciplinary;
 import com.scu.accommodationmanagement.mapper.DisciplinaryMapper;
@@ -27,13 +27,16 @@ public class DisciplinaryServiceImpl extends ServiceImpl<DisciplinaryMapper, Dis
     private DisciplinaryMapper disciplinaryMapper;
     @Override
     public PageDTO<Disciplinary> getDisciplinaryList(Integer pageNum, Integer pageSize, String reason, LocalDateTime startTime, LocalDateTime endTime) {
-        PageDTO<Disciplinary> pageDTO = new PageDTO<>();
-        PageHelper.startPage(pageNum, pageSize);
-        List<Disciplinary> disciplinaryList = disciplinaryMapper.getDisciplinaryList(reason, startTime, endTime);
-        Page<Disciplinary> page = (Page<Disciplinary>) disciplinaryList;
+        // 1. 构造 MP 分页对象
+        Page<Disciplinary> page = new Page<>(pageNum, pageSize);
 
-        pageDTO.setTotal(page.getTotal());
-        pageDTO.setItems(page.getResult());
-        return pageDTO;
+        // 2. 调用自定义的 Mapper 方法
+        IPage<Disciplinary> resultPage = disciplinaryMapper.pageList(page, reason, startTime, endTime);
+
+        // 3. 封装 DTO 并返回
+        PageDTO<Disciplinary> dto = new PageDTO<>();
+        dto.setTotal(resultPage.getTotal());
+        dto.setItems(resultPage.getRecords());
+        return dto;
     }
 }

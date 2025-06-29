@@ -1,5 +1,7 @@
 package com.scu.accommodationmanagement.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.scu.accommodationmanagement.model.po.Disciplinary;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -16,5 +18,5 @@ import java.util.List;
  */
 public interface DisciplinaryMapper extends BaseMapper<Disciplinary> {
 
-    List<Disciplinary> getDisciplinaryList(String reason, LocalDateTime startTime, LocalDateTime endTime);
+    IPage<Disciplinary> pageList(Page<Disciplinary> page, String reason, LocalDateTime startTime, LocalDateTime endTime);
 }

@@ -68,7 +68,7 @@ public class BedServiceImpl extends ServiceImpl<BedMapper, Bed> implements IBedS
         IPage<Bed> resultPage = bedMapper.pageList(page, parkId, buildingId, floor, roomId);
 
         // 3. 封装 DTO 并返回
-        PageDTO<Application> dto = new PageDTO<>();
+        PageDTO<Bed> dto = new PageDTO<>();
         dto.setTotal(resultPage.getTotal());
         dto.setItems(resultPage.getRecords());
         return dto;
