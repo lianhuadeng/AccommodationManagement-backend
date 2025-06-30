@@ -16,4 +16,6 @@ import java.util.List;
 public interface BuildingMapper extends BaseMapper<Building> {
 
     List<Building> listByParkId(Long parkId);
+
+    List<Building> listByDormitoryId(Long dormitoryId);
 }

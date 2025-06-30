@@ -18,4 +18,6 @@ public interface IBuildingService extends IService<Building> {
     void add(Long parkId, Integer floorNum, Integer roomNumPerFloor, Integer bedNumPerRoom);
 
     List<Building> listByParkId(Long parkId);
+
+    List<Building> listByDormitoryId(Long dormitoryId);
 }

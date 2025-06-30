@@ -6,4 +6,7 @@
             parameterType="java.lang.Long">
         select * from building where park_id = #{parkId}
     </select>
+    <select id="listByDormitoryId" resultType="com.scu.accommodationmanagement.model.po.Building">
+        select * from building where dormitory_id = #{dormitoryId}
+    </select>
 </mapper>

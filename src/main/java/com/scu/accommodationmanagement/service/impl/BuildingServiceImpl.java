@@ -99,4 +99,7 @@ public class BuildingServiceImpl extends ServiceImpl<BuildingMapper, Building> i
     public List<Building> listByParkId(Long parkId) {
         return buildingMapper.listByParkId(parkId);
     }
+
+    @Override
+    public List<Building> listByDormitoryId(Long dormitoryId) {return buildingMapper.listByDormitoryId(dormitoryId);}
 }

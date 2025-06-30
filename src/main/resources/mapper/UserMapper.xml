@@ -16,4 +16,5 @@
     <select id="userPageList" resultType="com.scu.accommodationmanagement.model.po.User">
         select * from user
     </select>
+
 </mapper>

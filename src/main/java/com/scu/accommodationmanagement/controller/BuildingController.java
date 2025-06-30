@@ -4,8 +4,10 @@ package com.scu.accommodationmanagement.controller;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.scu.accommodationmanagement.model.po.Building;
 import com.scu.accommodationmanagement.model.po.Park;
+import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.service.IBuildingService;
 import com.scu.accommodationmanagement.service.IParkService;
+import com.scu.accommodationmanagement.utils.CurrentUserUtil;
 import com.scu.accommodationmanagement.utils.JsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +38,12 @@ public class BuildingController {
     @GetMapping("/list")
     public JsonResponse list(@RequestParam Long parkId) {
         return JsonResponse.success(buildingService.listByParkId(parkId));
+    }
+    @GetMapping("/list2")
+    public JsonResponse list2() {
+        User user = CurrentUserUtil.getCurrentUser();
+        Long dorId = user.getUserId();
+        return JsonResponse.success(buildingService.listByDormitoryId(dorId));
     }
 
     @GetMapping("/getFloorNum")
