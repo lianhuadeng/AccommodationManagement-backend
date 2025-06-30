@@ -5,13 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.scu.accommodationmanagement.model.dto.LocationDTO;
 import com.scu.accommodationmanagement.model.dto.PageDTO;
 import com.scu.accommodationmanagement.model.dto.UserInfoDTO;
-import com.scu.accommodationmanagement.model.po.Application;
-import com.scu.accommodationmanagement.model.po.Bed;
 import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.model.vo.ChangePasswordVO;
 import com.scu.accommodationmanagement.model.vo.LoginVO;
 import com.scu.accommodationmanagement.service.FileService;
-import com.scu.accommodationmanagement.service.IApplicationService;
 import com.scu.accommodationmanagement.service.IBedService;
 import com.scu.accommodationmanagement.service.IUserService;
 import com.scu.accommodationmanagement.utils.*;
@@ -25,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import static com.scu.accommodationmanagement.utils.CurrentUserUtil.getCurrentUser;
 
@@ -125,7 +121,7 @@ public class UserController {
         }
         User byId = userService.getById(user.getUserId());
         if (byId != null) {
-            return JsonResponse.failure("学生已存在！");
+            return JsonResponse.failure(user.getUserId() + "用户已存在！");
         }
         // 参数校验
         if (user.getUserId() == null || user.getName() == null || user.getType() == null ||
@@ -187,9 +183,10 @@ public class UserController {
     @GetMapping("/systemAdmin/userPageList")
     public JsonResponse<PageDTO<User>> userPageList(
             Integer pageNum,
-            Integer pageSize
+            Integer pageSize,
+            @RequestParam(required = false) String type
     ){
-        return JsonResponse.success(userService.userPageList(pageNum, pageSize));
+        return JsonResponse.success(userService.userPageList(pageNum, pageSize, type));
     }
 
     @PostMapping("/systemAdmin/addUserWithExcel")

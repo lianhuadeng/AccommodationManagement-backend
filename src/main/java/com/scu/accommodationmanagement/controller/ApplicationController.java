@@ -262,4 +262,13 @@ public class ApplicationController {
         }
         return JsonResponse.success(myApplications);
     }
+
+    @GetMapping("/toBeReviewedApplication")
+    public JsonResponse toBeReviewedApplication() {
+        User user = CurrentUserUtil.getCurrentUser();
+        if (!user.getType().equals("分管领导")){
+            return JsonResponse.failure("无权限查看待审核申请！");
+        }
+        return JsonResponse.success(applicationService.getToBeReviewedApplication(user.getUserId()));
+    }
 }

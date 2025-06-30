@@ -16,5 +16,11 @@
     <select id="userPageList" resultType="com.scu.accommodationmanagement.model.po.User">
         select * from user
     </select>
-
+    <select id="pageList" resultType="com.scu.accommodationmanagement.model.po.User">
+        select * from user
+        where user_id is not null
+        <if test="type!= null and type!= ''">
+             and type = #{type}
+        </if>
+    </select>
 </mapper>

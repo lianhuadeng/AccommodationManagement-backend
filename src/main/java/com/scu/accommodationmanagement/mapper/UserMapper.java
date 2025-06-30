@@ -1,5 +1,7 @@
 package com.scu.accommodationmanagement.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.scu.accommodationmanagement.model.po.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -20,4 +22,6 @@ public interface UserMapper extends BaseMapper<User> {
     Long getDormitoryAdminIdByUserId(Long userId);
 
     List<User> userPageList();
+
+    IPage<User> pageList(Page<User> page, String type);
 }

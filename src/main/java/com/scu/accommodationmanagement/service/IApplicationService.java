@@ -33,4 +33,6 @@ public interface IApplicationService extends IService<Application> {
     List<Application> getByDormitoryId(Long userId);
 
     List<Application> getByLeaderId(Long userId);
+
+    List<Application> getToBeReviewedApplication(Long userId);
 }

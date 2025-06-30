@@ -87,5 +87,13 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
                         .eq("is_deleted", false));
     }
 
+    @Override
+    public List<Application> getToBeReviewedApplication(Long userId) {
+        return applicationMapper.selectList(
+                new QueryWrapper<Application>()
+                        .eq("status", "待审核")
+                        .eq("is_deleted", false));
+    }
+
 
 }

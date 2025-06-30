@@ -3,6 +3,7 @@ package com.scu.accommodationmanagement.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.scu.accommodationmanagement.model.dto.PageDTO;
+import com.scu.accommodationmanagement.model.po.Application;
 import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.mapper.UserMapper;
 import com.scu.accommodationmanagement.service.IUserService;
@@ -36,13 +37,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public PageDTO<User> userPageList(Integer pageNum, Integer pageSize) {
-        Page<User> mpPage = new Page<>(pageNum, pageSize);
-        IPage<User> resultPage = userMapper.selectPage(mpPage, null);
+    public PageDTO<User> userPageList(Integer pageNum, Integer pageSize, String type) {
+        // 1. 构造 MP 分页对象
+        Page<User> page = new Page<>(pageNum, pageSize);
 
-        PageDTO<User> pageDTO = new PageDTO<>();
-        pageDTO.setTotal(resultPage.getTotal());
-        pageDTO.setItems(resultPage.getRecords());
-        return pageDTO;
+        // 2. 调用自定义的 Mapper 方法
+        IPage<User> resultPage = userMapper.pageList(page, type);
+
+        // 3. 封装 DTO 并返回
+        PageDTO<User> dto = new PageDTO<>();
+        dto.setTotal(resultPage.getTotal());
+        dto.setItems(resultPage.getRecords());
+        return dto;
     }
 }
