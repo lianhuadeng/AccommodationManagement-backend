@@ -64,4 +64,11 @@
                  INNER JOIN park p ON b.park_id = p.park_id
         WHERE bed.user_id = #{userId}
     </select>
+    <select id="getDormitoryAdminIdByBedId" resultType="java.lang.Long" parameterType="java.lang.Long">
+        select building.dormitory_id
+        from bed
+                 inner join room on bed.room_id = room.room_id
+                 inner join building on room.building_id = building.building_id
+        where bed.bed_id = #{bedId}
+    </select>
 </mapper>

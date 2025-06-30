@@ -29,4 +29,6 @@ public interface BedMapper extends BaseMapper<Bed> {
     IPage<BedListDTO> pageList(Page<BedListDTO> page, Long parkId, Long buildingId, Long floor, Long roomId);
 
     LocationDTO getLocationByUserIdForApplication(Long userId);
+
+    Long getDormitoryAdminIdByBedId(Long bedId);
 }

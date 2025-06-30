@@ -2,6 +2,7 @@ package com.scu.accommodationmanagement.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.scu.accommodationmanagement.mapper.BedMapper;
 import com.scu.accommodationmanagement.model.dto.PageDTO;
 import com.scu.accommodationmanagement.model.po.Application;
 import com.scu.accommodationmanagement.model.po.User;
@@ -25,6 +26,8 @@ import java.util.List;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private BedMapper bedMapper;
 
     @Override
     public void addStudent(User user) {
@@ -49,5 +52,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         dto.setTotal(resultPage.getTotal());
         dto.setItems(resultPage.getRecords());
         return dto;
+    }
+
+    @Override
+    public Long getDormitoryAdminIdByBedId(Long bedId) {
+        return bedMapper.getDormitoryAdminIdByBedId(bedId);
     }
 }

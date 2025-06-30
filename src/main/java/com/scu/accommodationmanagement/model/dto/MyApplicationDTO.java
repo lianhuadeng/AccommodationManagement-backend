@@ -8,6 +8,9 @@ import java.time.LocalDateTime;
 public class MyApplicationDTO {
     private Long applicationId;
     private String applicationType;
+    private Long applierId;
+    private String applierName;
+    private String dormitoryAdminName;
     private String targetLocation;
     private String status;
     private String applicationTime;
