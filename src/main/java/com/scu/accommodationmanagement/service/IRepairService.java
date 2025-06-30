@@ -23,4 +23,8 @@ public interface IRepairService extends IService<Repair> {
     List<Repair> dormitoryAdminRepairs(Long userId, String status);
 
     List<Repair> getByStudentId(Long userId);
+
+    List<Repair> getByDormitoryId(Long userId);
+
+    List<Repair> getByMaintenanceId(Long userId);
 }

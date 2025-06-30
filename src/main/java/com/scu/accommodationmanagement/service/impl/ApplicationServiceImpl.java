@@ -69,5 +69,23 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
         return applicationMapper.selectList(new QueryWrapper<Application>().eq("applier_id", userId));
     }
 
+    @Override
+    public List<Application> getByDormitoryId(Long userId) {
+        return applicationMapper.selectList(
+                new QueryWrapper<Application>()
+                        .eq("dormitory_id", userId)
+                        .eq("status", "已处理")
+                        .eq("is_deleted", false));
+    }
+
+    @Override
+    public List<Application> getByLeaderId(Long userId) {
+        return applicationMapper.selectList(
+                new QueryWrapper<Application>()
+                        .eq("leader_id", userId)
+                        .eq("status", "待处理")
+                        .eq("is_deleted", false));
+    }
+
 
 }

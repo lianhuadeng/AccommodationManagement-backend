@@ -77,7 +77,7 @@ public class BedController {
             // 4. 调用宿舍分配服务
             bedService.batchAllocateBeds(groupedStudents, building);
 
-            return JsonResponse.success("批量排宿完成");
+            return JsonResponse.successMessage("批量排宿完成");
         } catch (IOException e) {
             return JsonResponse.failure("文件解析失败: " + e.getMessage());
         } catch (Exception e) {

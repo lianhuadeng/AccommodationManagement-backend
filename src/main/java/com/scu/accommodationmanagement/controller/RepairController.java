@@ -164,4 +164,52 @@ public class RepairController {
         }
         return JsonResponse.success(myRepairDTOList);
     }
+
+    @GetMapping("/getAllocatedRepair")
+    public JsonResponse getAllocatedRepair() {
+        User user = CurrentUserUtil.getCurrentUser();
+        if (!user.getType().equals("宿舍管理员")){
+            return JsonResponse.failure("无权限查看已处理申请！");
+        }
+        List<Repair> repairs = repairService.getByDormitoryId(user.getUserId());
+        List<MyRepairDTO> myRepairDTOList = new ArrayList<>();
+        for (Repair repair : repairs) {
+            MyRepairDTO myRepairDTO = new MyRepairDTO();
+            myRepairDTO.setRepairId(repair.getRepairId());
+            myRepairDTO.setRepairItem(repair.getRepairItem());
+            myRepairDTO.setContent(repair.getContent());
+            myRepairDTO.setApplyTime(DateTimeConverterUtil.convertToChineseDateTime(repair.getApplyTime()));
+            myRepairDTO.setStatus(repair.getStatus());
+            myRepairDTO.setLocation(repair.getLocation());
+            myRepairDTO.setPictureUrl(repair.getPictureUrl());
+            if (!repair.getStatus().equals("待分配"))
+                myRepairDTO.setMaintainerName(userService.getById(repair.getMaintenanceId()).getName());
+            myRepairDTOList.add(myRepairDTO);
+        }
+        return JsonResponse.success(myRepairDTOList);
+    }
+
+    @GetMapping("/getProcessedRepair")
+    public JsonResponse getProcessedRepair() {
+        User user = CurrentUserUtil.getCurrentUser();
+        if (!user.getType().equals("维修管理员")){
+            return JsonResponse.failure("无权限查看已处理申请！");
+        }
+        List<Repair> repairs = repairService.getByMaintenanceId(user.getUserId());
+        List<MyRepairDTO> myRepairDTOList = new ArrayList<>();
+        for (Repair repair : repairs) {
+            MyRepairDTO myRepairDTO = new MyRepairDTO();
+            myRepairDTO.setRepairId(repair.getRepairId());
+            myRepairDTO.setRepairItem(repair.getRepairItem());
+            myRepairDTO.setContent(repair.getContent());
+            myRepairDTO.setApplyTime(DateTimeConverterUtil.convertToChineseDateTime(repair.getApplyTime()));
+            myRepairDTO.setStatus(repair.getStatus());
+            myRepairDTO.setLocation(repair.getLocation());
+            myRepairDTO.setDormitoryName(userService.getById(repair.getDormitoryId()).getName());
+            myRepairDTO.setPictureUrl(repair.getPictureUrl());
+            myRepairDTO.setMaintainerName(userService.getById(repair.getStudentId()).getName());
+            myRepairDTOList.add(myRepairDTO);
+        }
+        return JsonResponse.success(myRepairDTOList);
+    }
 }

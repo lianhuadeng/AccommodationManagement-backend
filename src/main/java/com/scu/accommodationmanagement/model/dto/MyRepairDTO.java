@@ -6,6 +6,7 @@ import lombok.Data;
 public class MyRepairDTO {
     private Long repairId;
     private String maintainerName;
+    private String dormitoryName;
     private String repairItem;
     private String status;
     private String applyTime;

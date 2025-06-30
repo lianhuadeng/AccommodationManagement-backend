@@ -39,7 +39,7 @@ public class ParkController {
         }
         parkService.add(name, type, buildingNum, floorNum, roomNumPerFloor, bedNumPerRoom);
 
-        return JsonResponse.success("添加成功");
+        return JsonResponse.successMessage("添加成功");
     }
 
     @GetMapping("/list")

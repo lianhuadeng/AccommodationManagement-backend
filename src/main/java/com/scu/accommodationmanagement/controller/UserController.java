@@ -102,13 +102,15 @@ public class UserController {
                 || !changePasswordVO.getNewPassword().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$")) {
             return JsonResponse.failure("密码必须为6-20个字符，并包含大小写字母和数字");
         }
-
-        if (!Md5Util.getMD5String(changePasswordVO.getOldPassword()).equals(currentUser.getPassword())) {
-            return JsonResponse.failure("旧密码错误！");
-        }
         if (!changePasswordVO.getNewPassword().equals(changePasswordVO.getConfirmPassword())) {
             return JsonResponse.failure("两次密码输入不一致！");
         }
+
+        // 验证旧密码是否正确
+        if (!Md5Util.getMD5String(changePasswordVO.getOldPassword()).equals(currentUser.getPassword())) {
+            return JsonResponse.failure("旧密码错误！");
+        }
+
         currentUser.setPassword(Md5Util.getMD5String(changePasswordVO.getNewPassword()));
         userService.updateById(currentUser);
         return JsonResponse.successMessage("密码修改成功！");

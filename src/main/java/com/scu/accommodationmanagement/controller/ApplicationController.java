@@ -55,7 +55,7 @@ public class ApplicationController {
         application.setApplierId(CurrentUserUtil.getCurrentUser().getUserId());
         application.setStatus("待审核");
         applicationService.save(application);
-        return JsonResponse.success("申请完成，请等待分管领导审核");
+        return JsonResponse.successMessage("申请完成，请等待分管领导审核");
     }
 
     @PostMapping("/update")
@@ -76,7 +76,7 @@ public class ApplicationController {
 
         application.setApplierId(CurrentUserUtil.getCurrentUser().getUserId());
         applicationService.updateById(application);
-        return JsonResponse.success("修改完成，请等待分管领导审核");
+        return JsonResponse.successMessage("修改完成，请等待分管领导审核");
     }
 
     @PostMapping("/cancel")
@@ -197,6 +197,56 @@ public class ApplicationController {
         List<Application> byApplierId = applicationService.getByApplierId(user.getUserId());
         List<MyApplicationDTO> myApplications = new ArrayList<>();
         for (Application application : byApplierId) {
+            if (application.getIsDeleted()) continue;
+            MyApplicationDTO tmp = new MyApplicationDTO();
+            tmp.setApplicationId(application.getApplicationId());
+            tmp.setApplicationType(application.getApplicationType());
+            tmp.setApplicationTime(DateTimeConverterUtil.convertToChineseDateTime(application.getApplicationTime()));
+            tmp.setStatus(application.getStatus());
+            tmp.setRemark(application.getRemark());
+            tmp.setOpinion(application.getOpinion());
+            if (!application.getApplicationType().equals("校外住宿"))
+                tmp.setTargetLocation(bedService.getLocationByBedId(application.getTargetBed()));
+            else tmp.setTargetLocation(application.getNewAddress());
+            myApplications.add(tmp);
+        }
+        return JsonResponse.success(myApplications);
+    }
+
+    @GetMapping("/processedApplication")
+    public JsonResponse processedApplication() {
+        User user = CurrentUserUtil.getCurrentUser();
+        if (!user.getType().equals("宿舍管理员")){
+            return JsonResponse.failure("无权限查看已处理申请！");
+        }
+        List<Application> byDormitoryId = applicationService.getByDormitoryId(user.getUserId());
+        List<MyApplicationDTO> myApplications = new ArrayList<>();
+        for (Application application : byDormitoryId) {
+            if (application.getIsDeleted()) continue;
+            MyApplicationDTO tmp = new MyApplicationDTO();
+            tmp.setApplicationId(application.getApplicationId());
+            tmp.setApplicationType(application.getApplicationType());
+            tmp.setApplicationTime(DateTimeConverterUtil.convertToChineseDateTime(application.getApplicationTime()));
+            tmp.setStatus(application.getStatus());
+            tmp.setRemark(application.getRemark());
+            tmp.setOpinion(application.getOpinion());
+            if (!application.getApplicationType().equals("校外住宿"))
+                tmp.setTargetLocation(bedService.getLocationByBedId(application.getTargetBed()));
+            else tmp.setTargetLocation(application.getNewAddress());
+            myApplications.add(tmp);
+        }
+        return JsonResponse.success(myApplications);
+    }
+
+    @GetMapping("/reviewedApplication")
+    public JsonResponse reviewedApplication() {
+        User user = CurrentUserUtil.getCurrentUser();
+        if (!user.getType().equals("分管领导")){
+            return JsonResponse.failure("无权限查看已审核申请！");
+        }
+        List<Application> byLeaderId = applicationService.getByLeaderId(user.getUserId());
+        List<MyApplicationDTO> myApplications = new ArrayList<>();
+        for (Application application : byLeaderId) {
             if (application.getIsDeleted()) continue;
             MyApplicationDTO tmp = new MyApplicationDTO();
             tmp.setApplicationId(application.getApplicationId());

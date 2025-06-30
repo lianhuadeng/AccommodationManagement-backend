@@ -29,4 +29,8 @@ public interface IApplicationService extends IService<Application> {
     List<Application> adminApplications(Long userId, String status);
 
     List<Application> getByApplierId(Long userId);
+
+    List<Application> getByDormitoryId(Long userId);
+
+    List<Application> getByLeaderId(Long userId);
 }

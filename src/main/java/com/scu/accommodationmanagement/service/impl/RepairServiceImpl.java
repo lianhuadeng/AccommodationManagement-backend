@@ -1,5 +1,6 @@
 package com.scu.accommodationmanagement.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.scu.accommodationmanagement.model.po.Repair;
 import com.scu.accommodationmanagement.mapper.RepairMapper;
 import com.scu.accommodationmanagement.service.IRepairService;
@@ -41,5 +42,23 @@ public class RepairServiceImpl extends ServiceImpl<RepairMapper, Repair> impleme
     @Override
     public List<Repair> getByStudentId(Long userId) {
         return repairMapper.getByStudentId(userId);
+    }
+
+    @Override
+    public List<Repair> getByDormitoryId(Long userId) {
+        return repairMapper.selectList(
+                new QueryWrapper<Repair>()
+                        .eq("dormitory_id", userId)
+                        .eq("status", "待维修")
+                        .eq("is_deleted", false));
+    }
+
+    @Override
+    public List<Repair> getByMaintenanceId(Long userId) {
+        return repairMapper.selectList(
+                new QueryWrapper<Repair>()
+                        .eq("maintenance_id", userId)
+                        .eq("status", "已维修")
+                        .eq("is_deleted", false));
     }
 }
