@@ -303,4 +303,13 @@ public class UserController {
         return JsonResponse.success(location);
     }
 
+    @GetMapping("/getCurrentUserLocation")
+    public JsonResponse getCurrentUserLocation(){
+        User currentUser = getCurrentUser();
+        if (currentUser == null) {
+            return JsonResponse.failure("请先登录！");
+        }
+        return JsonResponse.success(bedService.getLocationByUserId(currentUser.getUserId()));
+    }
+
 }
