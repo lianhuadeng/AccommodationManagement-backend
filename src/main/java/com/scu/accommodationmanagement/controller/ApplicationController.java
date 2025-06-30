@@ -36,6 +36,8 @@ public class ApplicationController {
 
     @PostMapping("/add")
     public JsonResponse add(@RequestBody Application application) {
+        User user = CurrentUserUtil.getCurrentUser();
+        application.setApplierId(user.getUserId());
         Application oldApplication = applicationService.getLatestByApplierId(application.getApplierId());
         if (oldApplication != null && !oldApplication.getStatus().equals("已处理")) {
             return JsonResponse.failure("已提交过申请，请勿重复提交");
@@ -43,7 +45,10 @@ public class ApplicationController {
         //校验床位是否被占用
         Application byId = applicationService.getByTargetBed(application.getTargetBed());
         Bed bed = bedService.getById(application.getTargetBed());
-        if (byId != null || bed.getUserId() != null) {
+        if (!application.getApplicationType().equals("学生互换") &&
+                !application.getApplicationType().equals("校外住宿") &&
+                !application.getApplicationType().equals("个人退宿") &&
+                (byId != null || bed.getUserId() != null) ) {
             return JsonResponse.failure("目标床位被占用，请重新选择");
         }
 
@@ -101,10 +106,6 @@ public class ApplicationController {
             @RequestParam(required = false) LocalDateTime startTime,
             @RequestParam(required = false) LocalDateTime endTime
             ) {
-        User user = CurrentUserUtil.getCurrentUser();
-        if (!user.getType().equals("分管领导") && ! user.getType().equals("系统管理员")){
-            return JsonResponse.failure("无权限查看申请！");
-        }
         return JsonResponse.success(applicationService.pageList(studentId, applicationType, status, startTime, endTime, pageNum, pageSize));
     }
     //TODO:待测试

@@ -2,6 +2,7 @@ package com.scu.accommodationmanagement.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.scu.accommodationmanagement.model.dto.LocationDTO;
 import com.scu.accommodationmanagement.model.dto.PageDTO;
 import com.scu.accommodationmanagement.model.dto.UserInfoDTO;
 import com.scu.accommodationmanagement.model.po.Application;
@@ -295,6 +296,11 @@ public class UserController {
         return JsonResponse.success("退出成功！");
     }
 
-
+    @GetMapping("/getLocationByUserId")
+    public JsonResponse getLocationByUserId(@RequestParam Long userId){
+        userService.getById(userId);
+        LocationDTO location = bedService.getLocationByUserIdForApplication(userId);
+        return JsonResponse.success(location);
+    }
 
 }

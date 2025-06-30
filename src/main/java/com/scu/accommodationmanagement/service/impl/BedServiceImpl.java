@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.scu.accommodationmanagement.mapper.RoomMapper;
 import com.scu.accommodationmanagement.model.dto.BedListDTO;
+import com.scu.accommodationmanagement.model.dto.LocationDTO;
 import com.scu.accommodationmanagement.model.dto.PageDTO;
 import com.scu.accommodationmanagement.model.po.*;
 import com.scu.accommodationmanagement.mapper.BedMapper;
@@ -73,6 +74,11 @@ public class BedServiceImpl extends ServiceImpl<BedMapper, Bed> implements IBedS
         dto.setTotal(resultPage.getTotal());
         dto.setItems(resultPage.getRecords());
         return dto;
+    }
+
+    @Override
+    public LocationDTO getLocationByUserIdForApplication(Long userId) {
+        return bedMapper.getLocationByUserIdForApplication(userId);
     }
 
 

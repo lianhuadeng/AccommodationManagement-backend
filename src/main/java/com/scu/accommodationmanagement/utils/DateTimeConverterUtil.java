@@ -11,6 +11,17 @@ public class DateTimeConverterUtil {
     private static final DateTimeFormatter OUTPUT_FORMATTER = DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss");
 
     /**
+     * 将中文格式的日期时间字符串解析为LocalDateTime对象
+     *
+     * @param chineseDateTime 中文格式的日期时间字符串（例如："2025年06月26日 10:55:11"）
+     * @return 解析后的LocalDateTime对象
+     * @throws DateTimeParseException 当输入格式不符合中文格式时抛出异常
+     */
+    public static LocalDateTime parseFromChineseDateTime(String chineseDateTime) {
+        return LocalDateTime.parse(chineseDateTime, OUTPUT_FORMATTER);
+    }
+
+    /**
      * 将ISO格式的日期时间字符串转换为中文日期时间格式
      *
      * @param isoDateTime 输入的ISO格式字符串（例如："2025-06-26T10:55:11"）

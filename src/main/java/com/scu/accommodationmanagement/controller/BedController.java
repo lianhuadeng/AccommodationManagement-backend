@@ -97,9 +97,6 @@ public class BedController {
         PageDTO<BedListDTO> bedListDTOPageDTO = bedService.pageList(pageNum, pageSize, parkId, buildingId, floor, roomId);
         for (BedListDTO bed : bedListDTOPageDTO.getItems()){
             bed.setParkName(parkService.getById(bed.getParkId()).getName());
-            bed.setBuildingId(bed.getBuildingId()%100);
-            bed.setRoomId(bed.getRoomId()%10000);
-            bed.setBedId(bed.getBedId()%100);
             if (bed.getUserId() != null){
                 bed.setUserName(userService.getById(bed.getUserId()).getName());
             }else {

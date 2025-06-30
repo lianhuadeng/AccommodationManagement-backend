@@ -2,13 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.scu.accommodationmanagement.mapper.BedMapper">
     <select id="getLocationByUserId" resultType="java.lang.String">
-        SELECT
-            CONCAT(
-                    p.name, '-',
-                    b.building_id%100, '栋', '-',
-                    r.room_id%10000, '房', '-',
-                    bed.bed_id%100, '床'
-            ) AS location
+        SELECT CONCAT(
+                       p.name, '-',
+                       b.building_id % 100, '栋', '-',
+                       r.room_id % 10000, '房', '-',
+                       bed.bed_id % 100, '床'
+               ) AS location
         FROM bed
                  INNER JOIN room r ON bed.room_id = r.room_id
                  INNER JOIN building b ON r.building_id = b.building_id
@@ -18,7 +17,8 @@
     <select id="getOccupiedBeds" resultType="java.lang.Integer" parameterType="java.lang.Long">
         SELECT COUNT(user_id)
         FROM bed
-        WHERE room_id = #{roomId} AND user_id IS NOT NULL
+        WHERE room_id = #{roomId}
+          AND user_id IS NOT NULL
     </select>
     <select id="getLocationByBedId" resultType="java.lang.String" parameterType="java.lang.Long">
         SELECT CONCAT(
@@ -54,5 +54,14 @@
                 AND r.room_id = #{roomId}
             </if>
         </where>
+    </select>
+    <select id="getLocationByUserIdForApplication" resultType="com.scu.accommodationmanagement.model.dto.LocationDTO"
+            parameterType="java.lang.Long">
+        SELECT p.park_id, b.building_id, r.room_id, bed.bed_id
+        FROM bed
+                 INNER JOIN room r ON bed.room_id = r.room_id
+                 INNER JOIN building b ON r.building_id = b.building_id
+                 INNER JOIN park p ON b.park_id = p.park_id
+        WHERE bed.user_id = #{userId}
     </select>
 </mapper>

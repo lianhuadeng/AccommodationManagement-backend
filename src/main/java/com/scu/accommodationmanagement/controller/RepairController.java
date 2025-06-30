@@ -5,6 +5,7 @@ import com.scu.accommodationmanagement.model.dto.MyRepairDTO;
 import com.scu.accommodationmanagement.model.po.Repair;
 import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.service.FileService;
+import com.scu.accommodationmanagement.service.IBedService;
 import com.scu.accommodationmanagement.service.IRepairService;
 import com.scu.accommodationmanagement.service.IUserService;
 import com.scu.accommodationmanagement.utils.CurrentUserUtil;
@@ -35,6 +36,8 @@ public class RepairController {
     private IRepairService repairService;
     @Autowired
     private IUserService userService;
+    @Autowired
+    private IBedService bedService;
 
     @Autowired
     private FileService fileService;
@@ -42,6 +45,11 @@ public class RepairController {
     //TODO:待测试
     @PostMapping("/add")
     public JsonResponse add(@RequestBody Repair repair) {
+        User user = CurrentUserUtil.getCurrentUser();
+        // 给location添加默认值，默认为自己所在床位
+        if (repair.getLocation() == null || repair.getLocation().trim().equals("")) {
+            repair.setLocation(bedService.getLocationByUserId(user.getUserId()));
+        }
         repair.setStudentId(CurrentUserUtil.getCurrentUser().getUserId());
         repair.setDormitoryId(userService.getDormitoryAdminIdByUserId(CurrentUserUtil.getCurrentUser().getUserId()));
         repair.setStatus("待分配");
