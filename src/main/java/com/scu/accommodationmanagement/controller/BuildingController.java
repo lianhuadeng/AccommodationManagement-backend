@@ -62,7 +62,11 @@ public class BuildingController {
         if (!user.getType().equals("宿舍管理员")){
             return JsonResponse.failure("权限不足");
         }
-        return JsonResponse.success(buildingService.getByDormitoryId(user.getUserId()));
+        Building byDormitoryId = buildingService.getByDormitoryId(user.getUserId());
+        if (byDormitoryId == null) {
+            return JsonResponse.failure("您目前暂未管理任何楼栋，请联系系统管理员");
+        }
+        return JsonResponse.success(byDormitoryId);
     }
 
 }

@@ -26,12 +26,14 @@ public class HygieneCheckController {
     @Autowired
     private IHygieneCheckService hygieneCheckService;
 
-    //TODO: 待测试
     @PostMapping("/add")
     public JsonResponse addHygieneCheck(@RequestBody HygieneCheck hygieneCheck) {
         User user = CurrentUserUtil.getCurrentUser();
         if (!user.getType().equals("宿舍管理员")){
             return JsonResponse.failure("权限不足");
+        }
+        if (hygieneCheck.getScore() < 100 && hygieneCheck.getReason() == null){
+            return JsonResponse.failure("请填写原因");
         }
         hygieneCheck.setDormitoryId(user.getUserId());
         hygieneCheckService.save(hygieneCheck);
