@@ -14,10 +14,12 @@ import com.scu.accommodationmanagement.utils.CurrentUserUtil;
 import com.scu.accommodationmanagement.utils.DateTimeConverterUtil;
 import com.scu.accommodationmanagement.utils.JsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -185,16 +187,28 @@ public class ApplicationController {
         }
         Bed targetbed = bedService.getById(application.getTargetBed());
         switch (application.getApplicationType()) {
-            case "普通入住", "普通调整" -> {
+            case "普通入住" -> {
                 targetbed.setUserId(application.getApplierId());
                 bedService.updateById(targetbed);
             }
+            case "普通调整" -> {
+                Bed currentBed = bedService.getByUserId(application.getApplierId());
+                currentBed.setUserId(null);
+                bedService.updateByIdForApplication(currentBed);
+                targetbed.setUserId(application.getApplierId());
+                bedService.updateByIdForApplication(targetbed);
+            }
             case "学生互换" -> {
                 Bed currentBed = bedService.getByUserId(application.getApplierId());
-                currentBed.setUserId(targetbed.getUserId());
-                targetbed.setUserId(application.getApplierId());
-                bedService.updateById(currentBed);
-                bedService.updateById(targetbed);
+                Long targetBedUser = targetbed.getUserId();
+                Long currentBedUser = currentBed.getUserId();
+                bedService.clearUser(currentBed);
+                bedService.clearUser(targetbed);
+
+                currentBed.setUserId(targetBedUser);
+                bedService.updateByIdForApplication(currentBed);
+                targetbed.setUserId(currentBedUser);
+                bedService.updateByIdForApplication(targetbed);
             }
             case "个人退宿", "校外住宿" -> {
                 Bed currentBed = bedService.getByUserId(application.getApplierId());

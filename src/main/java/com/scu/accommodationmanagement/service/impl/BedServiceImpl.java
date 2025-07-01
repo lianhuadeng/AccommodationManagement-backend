@@ -1,6 +1,5 @@
 package com.scu.accommodationmanagement.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -12,7 +11,6 @@ import com.scu.accommodationmanagement.model.po.*;
 import com.scu.accommodationmanagement.mapper.BedMapper;
 import com.scu.accommodationmanagement.service.IBedService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.scu.accommodationmanagement.service.IRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -84,6 +82,16 @@ public class BedServiceImpl extends ServiceImpl<BedMapper, Bed> implements IBedS
     @Override
     public Long getDormitoryAdminIdByBedId(Long bedId) {
         return bedMapper.getDormitoryAdminIdByBedId(bedId);
+    }
+
+    @Override
+    public void updateByIdForApplication(Bed currentBed) {
+        bedMapper.updateByIdForApplication(currentBed);
+    }
+
+    @Override
+    public void clearUser(Bed currentBed) {
+        bedMapper.clearUser(currentBed);
     }
 
 

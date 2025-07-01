@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.scu.accommodationmanagement.mapper.BedMapper">
+    <update id="updateByIdForApplication">
+        UPDATE bed
+        SET room_id = #{roomId},
+            user_id = #{userId}
+        WHERE bed_id = #{bedId}
+    </update>
+    <update id="clearUser">
+        UPDATE bed
+        SET user_id = null
+        WHERE bed_id = #{bedId}
+    </update>
     <select id="getLocationByUserId" resultType="java.lang.String">
         SELECT CONCAT(
                        p.name, '-',

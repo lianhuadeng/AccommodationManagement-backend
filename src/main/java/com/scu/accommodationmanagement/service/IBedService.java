@@ -35,4 +35,8 @@ public interface IBedService extends IService<Bed> {
     LocationDTO getLocationByUserIdForApplication(Long userId);
 
     Long getDormitoryAdminIdByBedId(Long bedId);
+
+    void updateByIdForApplication(Bed currentBed);
+
+    void clearUser(Bed currentBed);
 }

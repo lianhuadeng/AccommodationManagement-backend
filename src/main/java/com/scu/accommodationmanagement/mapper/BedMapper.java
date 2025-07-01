@@ -8,6 +8,7 @@ import com.scu.accommodationmanagement.model.po.Bed;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * <p>
@@ -31,4 +32,8 @@ public interface BedMapper extends BaseMapper<Bed> {
     LocationDTO getLocationByUserIdForApplication(Long userId);
 
     Long getDormitoryAdminIdByBedId(Long bedId);
+
+    void updateByIdForApplication(Bed currentBed);
+
+    void clearUser(Bed currentBed);
 }
