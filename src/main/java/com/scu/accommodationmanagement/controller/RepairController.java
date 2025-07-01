@@ -156,7 +156,7 @@ public class RepairController {
         if (repair == null) {
             return JsonResponse.failure("申请不存在");
         }
-        if (!repair.getStatus().equals("已维修")){
+        if (repair.getStatus().equals("已维修")){
             return JsonResponse.failure("该维修已完成");
         }
         repair.setStatus("已维修");
