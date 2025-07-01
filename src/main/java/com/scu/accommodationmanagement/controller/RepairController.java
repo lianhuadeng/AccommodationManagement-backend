@@ -4,6 +4,7 @@ package com.scu.accommodationmanagement.controller;
 import com.scu.accommodationmanagement.model.dto.MyRepairDTO;
 import com.scu.accommodationmanagement.model.po.Repair;
 import com.scu.accommodationmanagement.model.po.User;
+import com.scu.accommodationmanagement.model.vo.AllocateRepairVO;
 import com.scu.accommodationmanagement.service.FileService;
 import com.scu.accommodationmanagement.service.IBedService;
 import com.scu.accommodationmanagement.service.IRepairService;
@@ -131,12 +132,15 @@ public class RepairController {
     // 宿舍管理员分配维修
     //TODO: 待测试
     @PostMapping("/allocate")
-    public JsonResponse allocate(@RequestParam Long repairId, @RequestParam Long maintenanceId) {
+    public JsonResponse allocate(@RequestBody AllocateRepairVO allocateRepairVO) {
+        Long repairId = allocateRepairVO.getRepairId();
+        Long maintenanceId = allocateRepairVO.getMaintenanceId();
         User user = CurrentUserUtil.getCurrentUser();
         if (!user.getType().equals("宿舍管理员")){
             return JsonResponse.failure("权限不足");
         }
         Repair repair = repairService.getById(repairId);
+        repair.setDormitoryId(user.getUserId());
         repair.setMaintenanceId(maintenanceId);
         repair.setStatus("待维修");
         repairService.updateById(repair);
@@ -229,6 +233,7 @@ public class RepairController {
             myRepairDTO.setStatus(repair.getStatus());
             myRepairDTO.setLocation(repair.getLocation());
             myRepairDTO.setPictureUrl(repair.getPictureUrl());
+            myRepairDTO.setApplierName(userService.getById(repair.getStudentId()).getName());
             myRepairDTOList.add(myRepairDTO);
         }
         return JsonResponse.success(myRepairDTOList);

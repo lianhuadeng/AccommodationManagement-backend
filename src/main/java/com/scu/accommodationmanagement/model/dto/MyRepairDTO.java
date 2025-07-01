@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class MyRepairDTO {
     private Long repairId;
+    private String applierName;
     private String maintainerName;
     private String dormitoryName;
     private String repairItem;
