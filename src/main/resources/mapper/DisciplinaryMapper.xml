@@ -20,7 +20,6 @@
             <if test="startTime == null and endTime != null">
                 AND creation_time &lt;= #{endTime}
             </if>
-            and is_deleted = 0
         </where>
         ORDER BY creation_time DESC
     </select>

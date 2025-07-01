@@ -77,7 +77,7 @@ public class RepairController {
         if (oldRepair == null) {
             return JsonResponse.failure("申请不存在");
         }
-        if (!oldRepair.getStatus().equals("待处理")){
+        if (!oldRepair.getStatus().equals("待维修")){
             return JsonResponse.failure("申请已处理, 无法修改");
         }
         repairService.updateById(repair);
@@ -137,9 +137,8 @@ public class RepairController {
             return JsonResponse.failure("权限不足");
         }
         Repair repair = repairService.getById(repairId);
-        repair.setDormitoryId(user.getUserId());
         repair.setMaintenanceId(maintenanceId);
-        repair.setStatus("待处理");
+        repair.setStatus("待维修");
         repairService.updateById(repair);
         return JsonResponse.successMessage("分配完成");
     }

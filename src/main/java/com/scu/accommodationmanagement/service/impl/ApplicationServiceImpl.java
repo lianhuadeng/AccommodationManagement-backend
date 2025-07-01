@@ -29,7 +29,6 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
     @Autowired
     private ApplicationMapper applicationMapper;
 
-
     @Override
     public PageDTO<Application> pageList(Long studentId, String applicationType, String status, LocalDateTime startTime, LocalDateTime endTime, Integer pageNum, Integer pageSize) {
         // 1. 构造 MP 分页对象
@@ -95,6 +94,4 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
                         .eq("status", "待审核")
                         .eq("is_deleted", false));
     }
-
-
 }

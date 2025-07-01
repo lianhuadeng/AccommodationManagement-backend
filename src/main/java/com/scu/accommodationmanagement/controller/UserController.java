@@ -67,7 +67,6 @@ public class UserController {
             operations.set(token, token, 1, TimeUnit.HOURS);
             return JsonResponse.success(token, byId.getType());
         }
-
         return JsonResponse.failure("账号或密码错误");
     }
 
@@ -144,7 +143,6 @@ public class UserController {
                 .substring(user.getUserId().toString().length() - 6)));
         userService.addStudent(user);
         return JsonResponse.successMessage("添加成功！");
-
     }
 
     @GetMapping("/userInfo")
