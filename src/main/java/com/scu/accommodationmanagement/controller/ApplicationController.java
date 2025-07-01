@@ -46,25 +46,37 @@ public class ApplicationController {
         if (oldApplication != null && !oldApplication.getStatus().equals("已处理")) {
             return JsonResponse.failure("已提交过申请，请勿重复提交");
         }
-        //校验床位是否被占用
-        Application byId = applicationService.getByTargetBed(application.getTargetBed());
-        Bed bed;
+
+        //获取目标床位
+        Bed targetbed;
         if (application.getApplicationType().equals("校外住宿") ||
                 application.getApplicationType().equals("个人退宿")){
-            bed = bedService.getById(bedService.getByUserId(user.getUserId()));
+            //退宿或校外住宿时，目标床位即为当前用户所在床位
+            targetbed = bedService.getById(bedService.getByUserId(user.getUserId()));
         }else {
-            bed = bedService.getById(application.getTargetBed());
+            //其余情况为校内住宿或学生互换，目标床位即为申请时选择的床位
+            targetbed = bedService.getById(application.getTargetBed());
         }
 
-        if (!application.getApplicationType().equals("学生互换") &&
-                !application.getApplicationType().equals("校外住宿") &&
-                !application.getApplicationType().equals("个人退宿") &&
-                (byId != null || bed.getUserId() != null) ) {
-            return JsonResponse.failure("目标床位被占用，请重新选择");
+        //校验目标床位是否被占用
+        if ((application.getApplicationType().equals("普通入住") ||
+                application.getApplicationType().equals("普通调整")) &&
+                targetbed.getUserId() != null){
+            return JsonResponse.failure("目标床位已被占用，请重新选择");
+        }
+        //校验普通入住申请时，自己是否已经有床位
+        if (application.getApplicationType().equals("普通入住") &&
+                targetbed.getUserId() == user.getUserId()){
+            return JsonResponse.failure("您已有床位，无需申请");
+        }
+        //校验普通调整时，目标床位是否属于自己
+        if (application.getApplicationType().equals("普通调整") &&
+                !targetbed.getUserId().equals(user.getUserId())){
+            return JsonResponse.failure("目标床位是你自己的床位，无需申请");
         }
 
         //分配处理人：宿舍管理员
-        application.setDormitoryId(userService.getDormitoryAdminIdByBedId(bed.getBedId()));
+        application.setDormitoryId(bedService.getDormitoryAdminIdByBedId(targetbed.getBedId()));
 
         application.setApplierId(CurrentUserUtil.getCurrentUser().getUserId());
         application.setStatus("待审核");
@@ -78,7 +90,7 @@ public class ApplicationController {
         if (oldApplication == null) {
             return JsonResponse.failure("该申请不存在");
         }
-        if (!oldApplication.getStatus().equals("待审核")){
+        if (!oldApplication.getStatus().equals("待审核")) {
             return JsonResponse.failure("该申请已处理，请勿重复操作");
         }
 
@@ -97,11 +109,11 @@ public class ApplicationController {
     public JsonResponse delete(Long applicationId) {
         Application byId = applicationService.getById(applicationId);
         User user = CurrentUserUtil.getCurrentUser();
-        if (!user.getUserId().equals(byId.getApplierId())){
+        if (!user.getUserId().equals(byId.getApplierId())) {
             return JsonResponse.failure("只能撤销自己的申请！");
         }
 
-        if (!byId.getStatus().equals("待审核") && !byId.getStatus().equals("不通过")){
+        if (!byId.getStatus().equals("待审核") && !byId.getStatus().equals("不通过")) {
             return JsonResponse.failure("该申请已开始处理，无法删除！");
         }
 
@@ -119,9 +131,10 @@ public class ApplicationController {
             @RequestParam(required = false) String status,
             @RequestParam(required = false) LocalDateTime startTime,
             @RequestParam(required = false) LocalDateTime endTime
-            ) {
+    ) {
         return JsonResponse.success(applicationService.pageList(studentId, applicationType, status, startTime, endTime, pageNum, pageSize));
     }
+
     //TODO:待测试
     @GetMapping("/userApplications")
     public JsonResponse userApplications(@RequestParam String status) {
@@ -135,7 +148,7 @@ public class ApplicationController {
     @GetMapping("/adminApplications")
     public JsonResponse adminApplications(@RequestParam String status) {
         User user = CurrentUserUtil.getCurrentUser();
-        if (!user.getType().equals("宿舍管理员")){
+        if (!user.getType().equals("宿舍管理员")) {
             return JsonResponse.failure("无权限查看申请！");
         }
         return JsonResponse.success(applicationService.adminApplications(user.getUserId(), status));
@@ -146,18 +159,18 @@ public class ApplicationController {
         User user = CurrentUserUtil.getCurrentUser();
         Long applicationId = reviewDataVO.getApplicationId();
         String opinion = reviewDataVO.getOpinion();
-        if (!user.getType().equals("分管领导")){
+        if (!user.getType().equals("分管领导")) {
             return JsonResponse.failure("无权限审核申请！");
         }
         Application application = applicationService.getById(applicationId);
-        if (!application.getStatus().equals("待审核")){
+        if (!application.getStatus().equals("待审核")) {
             return JsonResponse.failure("该申请已处理，请勿重复操作！");
         }
         application.setLeaderId(user.getUserId());
-        if(!opinion.isBlank()){
+        if (!opinion.isBlank()) {
             application.setOpinion(opinion);
             application.setStatus("不通过");
-        }else{
+        } else {
             application.setStatus("待处理");
         }
 
@@ -169,11 +182,11 @@ public class ApplicationController {
     @PostMapping("/process")
     public JsonResponse process(@RequestParam Long applicationId) {
         User user = CurrentUserUtil.getCurrentUser();
-        if (!user.getType().equals("宿舍管理员")){
+        if (!user.getType().equals("宿舍管理员")) {
             return JsonResponse.failure("无权限处理申请！");
         }
         Application application = applicationService.getById(applicationId);
-        if (application.getStatus().equals("待审核") || application.getStatus().equals("不通过")){
+        if (application.getStatus().equals("待审核") || application.getStatus().equals("不通过")) {
             return JsonResponse.failure("该申请未审核通过，无法处理！");
         }
         Bed targetbed = bedService.getById(application.getTargetBed());
@@ -239,6 +252,16 @@ public class ApplicationController {
         return JsonResponse.success(convertToDTO(apps));
     }
 
+    @GetMapping("/toBeProcessedApplication")
+    public JsonResponse toBeProcessedApplication() {
+        User user = CurrentUserUtil.getCurrentUser();
+        if (!"宿舍管理员".equals(user.getType())) {
+            return JsonResponse.failure("无权限查看待处理申请！");
+        }
+        List<Application> apps = applicationService.getToBeProcessedApplication(user.getUserId());
+        return JsonResponse.success(convertToDTO(apps));
+    }
+
     private List<MyApplicationDTO> convertToDTO(List<Application> applications) {
         List<MyApplicationDTO> dtos = new ArrayList<>();
         for (Application app : applications) {
@@ -253,6 +276,9 @@ public class ApplicationController {
             dto.setApplierId(app.getApplierId());
             dto.setApplierName(userService.getById(app.getApplierId()).getName());
             dto.setDormitoryAdminName(userService.getById(app.getDormitoryId()).getName());
+            if (app.getLeaderId() != null) {
+                dto.setLeaderName(userService.getById(app.getLeaderId()).getName());
+            }
             if (!"校外住宿".equals(app.getApplicationType())) {
                 dto.setTargetLocation(bedService.getLocationByBedId(app.getTargetBed()));
             } else {

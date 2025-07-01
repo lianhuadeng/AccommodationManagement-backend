@@ -19,6 +19,4 @@ public interface IUserService extends IService<User> {
     Long getDormitoryAdminIdByUserId(Long userId);
 
     PageDTO<User> userPageList(Integer pageNum, Integer pageSize, String type);
-
-    Long getDormitoryAdminIdByBedId(Long bedId);
 }

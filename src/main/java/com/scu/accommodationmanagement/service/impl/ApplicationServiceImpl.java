@@ -94,4 +94,14 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
                         .eq("status", "待审核")
                         .eq("is_deleted", false));
     }
+
+    @Override
+    public List<Application> getToBeProcessedApplication(Long userId) {
+        return applicationMapper.selectList(
+                new QueryWrapper<Application>()
+                        .eq("status", "待处理")
+                        .eq("is_deleted", false)
+                        .eq("dormitory_id", userId)
+        );
+    }
 }

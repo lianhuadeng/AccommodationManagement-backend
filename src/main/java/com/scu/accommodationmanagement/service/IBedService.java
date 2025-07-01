@@ -33,4 +33,6 @@ public interface IBedService extends IService<Bed> {
     PageDTO<BedListDTO> pageList(Integer pageNum, Integer pageSize, Long parkId, Long buildingId, Long floor, Long roomId);
 
     LocationDTO getLocationByUserIdForApplication(Long userId);
+
+    Long getDormitoryAdminIdByBedId(Long bedId);
 }

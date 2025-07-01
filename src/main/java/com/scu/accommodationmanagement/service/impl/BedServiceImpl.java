@@ -81,6 +81,11 @@ public class BedServiceImpl extends ServiceImpl<BedMapper, Bed> implements IBedS
         return bedMapper.getLocationByUserIdForApplication(userId);
     }
 
+    @Override
+    public Long getDormitoryAdminIdByBedId(Long bedId) {
+        return bedMapper.getDormitoryAdminIdByBedId(bedId);
+    }
+
 
     public Integer getOccupiedBeds(Long roomId) {
         return bedMapper.getOccupiedBeds(roomId);

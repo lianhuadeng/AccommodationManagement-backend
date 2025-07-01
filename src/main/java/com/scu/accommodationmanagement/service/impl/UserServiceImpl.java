@@ -53,9 +53,4 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         dto.setItems(resultPage.getRecords());
         return dto;
     }
-
-    @Override
-    public Long getDormitoryAdminIdByBedId(Long bedId) {
-        return bedMapper.getDormitoryAdminIdByBedId(bedId);
-    }
 }

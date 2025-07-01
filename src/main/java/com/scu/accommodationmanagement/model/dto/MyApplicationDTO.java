@@ -2,14 +2,13 @@ package com.scu.accommodationmanagement.model.dto;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
 public class MyApplicationDTO {
     private Long applicationId;
     private String applicationType;
     private Long applierId;
     private String applierName;
+    private String leaderName;
     private String dormitoryAdminName;
     private String targetLocation;
     private String status;

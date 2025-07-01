@@ -36,4 +36,5 @@ public interface IApplicationService extends IService<Application> {
 
     List<Application> getToBeReviewedApplication(Long userId);
 
+    List<Application> getToBeProcessedApplication(Long userId);
 }
