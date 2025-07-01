@@ -95,6 +95,7 @@ public class DisciplinaryController {
             disciplinaryVO.setReason(disciplinary.getReason());
             disciplinaryVO.setTime(DateTimeConverterUtil.convertToChineseDateTime(disciplinary.getCreateTime()));
             disciplinaryVO.setLocation(bedService.getLocationByUserId(disciplinary.getStudentId()));
+            if (disciplinary.getScore()!= null) disciplinaryVO.setScore(disciplinary.getScore());
             disciplinaryVOList.add(disciplinaryVO);
         }
         return JsonResponse.success(disciplinaryVOList);

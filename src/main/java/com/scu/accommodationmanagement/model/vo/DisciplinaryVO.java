@@ -10,6 +10,7 @@ public class DisciplinaryVO {
     Long studentId;
     String studentName;
     String reason;
+    Long score;
     String time;
     String location;
 }
