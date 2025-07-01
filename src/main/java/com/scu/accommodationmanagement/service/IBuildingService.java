@@ -20,4 +20,6 @@ public interface IBuildingService extends IService<Building> {
     List<Building> listByParkId(Long parkId);
 
     List<Building> listByDormitoryId(Long dormitoryId);
+
+    Building getByDormitoryId(Long userId);
 }

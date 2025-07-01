@@ -1,5 +1,6 @@
 package com.scu.accommodationmanagement.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.scu.accommodationmanagement.mapper.BedMapper;
 import com.scu.accommodationmanagement.mapper.ParkMapper;
 import com.scu.accommodationmanagement.mapper.RoomMapper;
@@ -102,4 +103,9 @@ public class BuildingServiceImpl extends ServiceImpl<BuildingMapper, Building> i
 
     @Override
     public List<Building> listByDormitoryId(Long dormitoryId) {return buildingMapper.listByDormitoryId(dormitoryId);}
+
+    @Override
+    public Building getByDormitoryId(Long userId) {
+        return buildingMapper.selectOne(new QueryWrapper<Building>().eq("dormitory_id", userId));
+    }
 }

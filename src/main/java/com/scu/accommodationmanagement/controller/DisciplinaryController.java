@@ -77,6 +77,29 @@ public class DisciplinaryController {
         return JsonResponse.success(disciplinaryService.getDisciplinaryList(pageNum, pageSize, reason, startTime, endTime));
     }
 
+    @GetMapping("/myDisciplinary")
+    public JsonResponse getMyDisciplinary() {
+        User user = CurrentUserUtil.getCurrentUser();
+        if (!user.getType().equals("学生")) {
+            return JsonResponse.failure("接口仅供学生使用");
+        }
+        List<DisciplinaryVO> disciplinaryVOList = new ArrayList<>();
+        List<Disciplinary> disciplinaryList = disciplinaryService.list(new QueryWrapper<Disciplinary>().eq("student_id", user.getUserId()));
+        for (Disciplinary disciplinary : disciplinaryList) {
+            DisciplinaryVO disciplinaryVO = new DisciplinaryVO();
+            disciplinaryVO.setDisciplinaryId(disciplinary.getDisciplinaryId());
+            disciplinaryVO.setDormitoryId(disciplinary.getDormitoryId());
+            disciplinaryVO.setDormitoryName(userService.getById(disciplinary.getDormitoryId()).getName());
+            disciplinaryVO.setStudentId(disciplinary.getStudentId());
+            disciplinaryVO.setStudentName(userService.getById(disciplinary.getStudentId()).getName());
+            disciplinaryVO.setReason(disciplinary.getReason());
+            disciplinaryVO.setTime(DateTimeConverterUtil.convertToChineseDateTime(disciplinary.getCreateTime()));
+            disciplinaryVO.setLocation(bedService.getLocationByUserId(disciplinary.getStudentId()));
+            disciplinaryVOList.add(disciplinaryVO);
+        }
+        return JsonResponse.success(disciplinaryVOList);
+    }
+
     @GetMapping("/toBeRateDisciplinary")
     public JsonResponse toBeRateDisciplinary() {
         User user = CurrentUserUtil.getCurrentUser();

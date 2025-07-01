@@ -55,4 +55,14 @@ public class BuildingController {
         return JsonResponse.success(building.getFloorNum());
     }
 
+    //获取登录宿管管理的楼栋
+    @GetMapping("/getManagedBuilding")
+    public JsonResponse getManagedBuilding() {
+        User user = CurrentUserUtil.getCurrentUser();
+        if (!user.getType().equals("宿舍管理员")){
+            return JsonResponse.failure("权限不足");
+        }
+        return JsonResponse.success(buildingService.getByDormitoryId(user.getUserId()));
+    }
+
 }
