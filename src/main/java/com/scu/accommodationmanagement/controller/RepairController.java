@@ -130,7 +130,6 @@ public class RepairController {
     }
 
     // 宿舍管理员分配维修
-    //TODO: 待测试
     @PostMapping("/allocate")
     public JsonResponse allocate(@RequestBody AllocateRepairVO allocateRepairVO) {
         Long repairId = allocateRepairVO.getRepairId();
@@ -145,6 +144,24 @@ public class RepairController {
         repair.setStatus("待维修");
         repairService.updateById(repair);
         return JsonResponse.successMessage("分配完成");
+    }
+
+    @PostMapping("/maintain")
+    public JsonResponse maintain(@RequestParam Long repairId) {
+        User user = CurrentUserUtil.getCurrentUser();
+        if (!user.getType().equals("维修管理员")){
+            return JsonResponse.failure("权限不足");
+        }
+        Repair repair = repairService.getById(repairId);
+        if (repair == null) {
+            return JsonResponse.failure("申请不存在");
+        }
+        if (!repair.getStatus().equals("已维修")){
+            return JsonResponse.failure("该维修已完成");
+        }
+        repair.setStatus("已维修");
+        repairService.updateById(repair);
+        return JsonResponse.successMessage("维修完成");
     }
 
     @GetMapping("/myRepair")
