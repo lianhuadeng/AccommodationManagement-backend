@@ -43,7 +43,7 @@ public class ApplicationController {
         User user = CurrentUserUtil.getCurrentUser();
         application.setApplierId(user.getUserId());
         Application oldApplication = applicationService.getLatestByApplierId(application.getApplierId());
-        if (oldApplication != null && !oldApplication.getStatus().equals("已处理")) {
+        if (oldApplication != null && !oldApplication.getStatus().equals("已处理") && !oldApplication.getStatus().equals("不通过")) {
             return JsonResponse.failure("已提交过申请，请勿重复提交");
         }
 
@@ -65,14 +65,8 @@ public class ApplicationController {
             return JsonResponse.failure("目标床位已被占用，请重新选择");
         }
         //校验普通入住申请时，自己是否已经有床位
-        if (application.getApplicationType().equals("普通入住") &&
-                targetbed.getUserId() == user.getUserId()){
+        if (application.getApplicationType().equals("普通入住") && bedService.getById(bedService.getByUserId(user.getUserId())) != null){
             return JsonResponse.failure("您已有床位，无需申请");
-        }
-        //校验普通调整时，目标床位是否属于自己
-        if (application.getApplicationType().equals("普通调整") &&
-                !targetbed.getUserId().equals(user.getUserId())){
-            return JsonResponse.failure("目标床位是你自己的床位，无需申请");
         }
 
         //分配处理人：宿舍管理员
@@ -212,7 +206,7 @@ public class ApplicationController {
         application.setStatus("已处理");
         application.setProcessTime(LocalDateTime.now());
         applicationService.updateById(application);
-        return JsonResponse.success("处理成功");
+        return JsonResponse.successMessage("处理成功");
     }
 
     @GetMapping("/myApplication")
