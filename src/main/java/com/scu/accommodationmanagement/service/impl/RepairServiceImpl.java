@@ -61,4 +61,14 @@ public class RepairServiceImpl extends ServiceImpl<RepairMapper, Repair> impleme
                         .eq("status", "已维修")
                         .eq("is_deleted", false));
     }
+
+    @Override
+    public List<Repair> toBeAllocatedRepair(Long userId) {
+        return repairMapper.selectList(
+                new QueryWrapper<Repair>()
+                        .eq("dormitory_id", userId)
+                        .eq("status", "待分配")
+                        .eq("is_deleted", false)
+        );
+    }
 }

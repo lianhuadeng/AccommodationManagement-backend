@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -83,7 +84,7 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
         return applicationMapper.selectList(
                 new QueryWrapper<Application>()
                         .eq("leader_id", userId)
-                        .eq("status", "待处理")
+                        .in("status", Arrays.asList("待处理", "不通过"))
                         .eq("is_deleted", false));
     }
 

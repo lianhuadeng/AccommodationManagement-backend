@@ -212,4 +212,26 @@ public class RepairController {
         }
         return JsonResponse.success(myRepairDTOList);
     }
+
+    @GetMapping("/toBeAllocatedRepair")
+    public JsonResponse toBeAllocatedRepair() {
+        User user = CurrentUserUtil.getCurrentUser();
+        if (!user.getType().equals("宿舍管理员")){
+            return JsonResponse.failure("无权限查看待分配申请！");
+        }
+        List<Repair> repairs = repairService.toBeAllocatedRepair(user.getUserId());
+        List<MyRepairDTO> myRepairDTOList = new ArrayList<>();
+        for (Repair repair : repairs) {
+            MyRepairDTO myRepairDTO = new MyRepairDTO();
+            myRepairDTO.setRepairId(repair.getRepairId());
+            myRepairDTO.setRepairItem(repair.getRepairItem());
+            myRepairDTO.setContent(repair.getContent());
+            myRepairDTO.setApplyTime(DateTimeConverterUtil.convertToChineseDateTime(repair.getApplyTime()));
+            myRepairDTO.setStatus(repair.getStatus());
+            myRepairDTO.setLocation(repair.getLocation());
+            myRepairDTO.setPictureUrl(repair.getPictureUrl());
+            myRepairDTOList.add(myRepairDTO);
+        }
+        return JsonResponse.success(myRepairDTOList);
+    }
 }

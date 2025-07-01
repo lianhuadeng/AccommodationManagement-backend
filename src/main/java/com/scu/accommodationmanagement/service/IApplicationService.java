@@ -35,4 +35,5 @@ public interface IApplicationService extends IService<Application> {
     List<Application> getByLeaderId(Long userId);
 
     List<Application> getToBeReviewedApplication(Long userId);
+
 }

@@ -27,4 +27,6 @@ public interface IRepairService extends IService<Repair> {
     List<Repair> getByDormitoryId(Long userId);
 
     List<Repair> getByMaintenanceId(Long userId);
+
+    List<Repair> toBeAllocatedRepair(Long userId);
 }

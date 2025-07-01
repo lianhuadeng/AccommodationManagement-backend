@@ -157,9 +157,11 @@ public class ApplicationController {
         if(!opinion.isBlank()){
             application.setOpinion(opinion);
             application.setStatus("不通过");
+        }else {
+            application.setStatus("待处理");
         }
 
-        application.setStatus("待处理");
+
         application.setReviewTime(LocalDateTime.now());
         applicationService.updateById(application);
         return JsonResponse.successMessage("审核完成，请等待宿舍管理员处理");
