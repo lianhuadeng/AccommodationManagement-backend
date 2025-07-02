@@ -150,6 +150,15 @@ public class UserController {
         User user = getCurrentUser();
         if (user != null) {
             String location = bedService.getLocationByUserId(user.getUserId());
+            if (bedService.getByUserId(user.getUserId()) == null){
+                UserInfoDTO userInfoDTO = new UserInfoDTO(
+                        user.getName(),
+                        user.getUserId(),
+                        user.getContact(),
+                        location
+                );
+                return JsonResponse.success(userInfoDTO);
+            }
             UserInfoDTO userInfoDTO = new UserInfoDTO(
                     user.getName(),
                     user.getUserId(),

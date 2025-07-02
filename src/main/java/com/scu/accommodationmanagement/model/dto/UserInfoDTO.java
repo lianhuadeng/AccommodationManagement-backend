@@ -18,4 +18,11 @@ public class UserInfoDTO {
         this.roomId = roomId;
     }
 
+    public UserInfoDTO(String name, Long userId, String contact, String location) {
+        this.name = name;
+        this.userId = userId;
+        this.contact = contact;
+        this.location = location;
+    }
+
 }
