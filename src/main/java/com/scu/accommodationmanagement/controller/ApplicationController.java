@@ -275,5 +275,30 @@ public class ApplicationController {
         return JsonResponse.success(convertToDTO(apps));
     }
 
-
+    private List<MyApplicationDTO> convertToDTO(List<Application> applications) {
+        List<MyApplicationDTO> dtos = new ArrayList<>();
+        for (Application app : applications) {
+            if (app.getIsDeleted()) continue;
+            MyApplicationDTO dto = new MyApplicationDTO();
+            dto.setApplicationId(app.getApplicationId());
+            dto.setApplicationType(app.getApplicationType());
+            dto.setApplicationTime(DateTimeConverterUtil.convertToChineseDateTime(app.getApplicationTime()));
+            dto.setStatus(app.getStatus());
+            dto.setRemark(app.getRemark());
+            dto.setOpinion(app.getOpinion());
+            dto.setApplierId(app.getApplierId());
+            dto.setApplierName(userService.getById(app.getApplierId()).getName());
+            dto.setDormitoryAdminName(userService.getById(app.getDormitoryId()).getName());
+            if (app.getLeaderId() != null) {
+                dto.setLeaderName(userService.getById(app.getLeaderId()).getName());
+            }
+            if (!"校外住宿".equals(app.getApplicationType())) {
+                dto.setTargetLocation(bedService.getLocationByBedId(app.getTargetBed()));
+            } else {
+                dto.setTargetLocation(app.getNewAddress());
+            }
+            dtos.add(dto);
+        }
+        return dtos;
+    }
 }
