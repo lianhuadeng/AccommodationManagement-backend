@@ -143,6 +143,9 @@ public class UserController {
                 return JsonResponse.failure("缺少必要参数");
             }
         }
+        if (user.getUserId()<100000){
+            return JsonResponse.failure("请输入正确的学号或工号");
+        }
         // 设置默认密码
         user.setPassword(Md5Util.getMD5String(user.getUserId().toString()
                 .substring(user.getUserId().toString().length() - 6)));
