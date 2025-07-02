@@ -12,6 +12,9 @@ import com.scu.accommodationmanagement.utils.JsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * <p>
  * 楼栋 前端控制器
@@ -69,4 +72,30 @@ public class BuildingController {
         return JsonResponse.success(byDormitoryId);
     }
 
+    //获取未分配宿管的楼栋
+    @GetMapping("/getUnManagedBuilding")
+    public JsonResponse getUnManagedBuilding() {
+        User user = CurrentUserUtil.getCurrentUser();
+        if (!user.getType().equals("系统管理员")){
+            return JsonResponse.failure("权限不足");
+        }
+        List<Building> unManagedBuilding = buildingService.getUnManagedBuilding();
+        return JsonResponse.success(unManagedBuilding);
+    }
+
+    //分配宿管
+    @PostMapping("/assignDormitory")
+    public JsonResponse assignDormitory(@RequestParam Long buildingId, @RequestParam Long dormitoryId) {
+        User user = CurrentUserUtil.getCurrentUser();
+        if (!user.getType().equals("系统管理员")){
+            return JsonResponse.failure("权限不足");
+        }
+        if (buildingService.getByDormitoryId(dormitoryId) != null) {
+            return JsonResponse.failure("该管理员已有管理楼栋，请勿重复分配");
+        }
+        Building byId = buildingService.getById(buildingId);
+        byId.setDormitoryId(dormitoryId);
+        buildingService.updateById(byId);
+        return JsonResponse.successMessage("分配成功");
+    }
 }

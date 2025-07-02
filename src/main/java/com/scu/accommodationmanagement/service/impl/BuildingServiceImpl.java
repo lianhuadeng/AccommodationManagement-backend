@@ -108,4 +108,9 @@ public class BuildingServiceImpl extends ServiceImpl<BuildingMapper, Building> i
     public Building getByDormitoryId(Long userId) {
         return buildingMapper.selectOne(new QueryWrapper<Building>().eq("dormitory_id", userId));
     }
+
+    @Override
+    public List<Building> getUnManagedBuilding() {
+        return buildingMapper.selectList(new QueryWrapper<Building>().isNull("dormitory_id"));
+    }
 }

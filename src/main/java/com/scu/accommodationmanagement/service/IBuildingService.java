@@ -22,4 +22,7 @@ public interface IBuildingService extends IService<Building> {
     List<Building> listByDormitoryId(Long dormitoryId);
 
     Building getByDormitoryId(Long userId);
+
+    List<Building> getUnManagedBuilding();
+
 }

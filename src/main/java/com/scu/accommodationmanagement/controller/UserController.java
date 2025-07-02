@@ -5,11 +5,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.scu.accommodationmanagement.model.dto.LocationDTO;
 import com.scu.accommodationmanagement.model.dto.PageDTO;
 import com.scu.accommodationmanagement.model.dto.UserInfoDTO;
+import com.scu.accommodationmanagement.model.po.Building;
 import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.model.vo.ChangePasswordVO;
 import com.scu.accommodationmanagement.model.vo.LoginVO;
 import com.scu.accommodationmanagement.service.FileService;
 import com.scu.accommodationmanagement.service.IBedService;
+import com.scu.accommodationmanagement.service.IBuildingService;
 import com.scu.accommodationmanagement.service.IUserService;
 import com.scu.accommodationmanagement.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,9 @@ public class UserController {
 
     @Autowired
     private IBedService bedService;
+
+    @Autowired
+    private IBuildingService buildingService;
 
     @Autowired
     private FileService fileService;
@@ -174,7 +179,7 @@ public class UserController {
 
     @PostMapping("/systemAdmin/setAdminType")
     public JsonResponse setPermission(@RequestParam Long userId, @RequestParam String adminType){
-        // Permission: 宿舍管理员，维修管理员，分管领导
+        // Permission: 宿舍管理员，维修管理员，分管领导，系统管理员
         User currentUser = getCurrentUser();
         if (currentUser == null || !currentUser.getType().equals("系统管理员")) {
             return JsonResponse.failure("无权限操作！");
@@ -183,6 +188,13 @@ public class UserController {
         if (byId == null) {
             return JsonResponse.failure("用户不存在！");
         }
+        // 检测是否为移除宿舍管理员
+        if (byId.getType().equals("宿舍管理员") && !adminType.equals("宿舍管理员")){
+            Building building = buildingService.getByDormitoryId(userId);
+            building.setDormitoryId(null);
+            buildingService.updateById(building);
+        }
+
         byId.setType(adminType);
         userService.updateById(byId);
         return JsonResponse.successMessage("设置成功！");
