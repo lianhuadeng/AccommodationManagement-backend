@@ -71,6 +71,10 @@ public class ApplicationController {
             return JsonResponse.failure("您已有床位，无需申请");
         }
 
+        Long dormitoryAdminIdByBedId = bedService.getDormitoryAdminIdByBedId(targetbed.getBedId());
+        if (dormitoryAdminIdByBedId == null){
+            return JsonResponse.failure("该楼栋未分配宿舍管理员，请重新选择");
+        }
         //分配处理人：宿舍管理员
         application.setDormitoryId(bedService.getDormitoryAdminIdByBedId(targetbed.getBedId()));
 

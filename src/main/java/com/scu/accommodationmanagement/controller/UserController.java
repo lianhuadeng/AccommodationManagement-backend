@@ -154,7 +154,8 @@ public class UserController {
                     user.getName(),
                     user.getUserId(),
                     user.getContact(),
-                    location
+                    location,
+                    bedService.getByUserId(user.getUserId()).getRoomId()
             );
             return JsonResponse.success(userInfoDTO);
         }else {
