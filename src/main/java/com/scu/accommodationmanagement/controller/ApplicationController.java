@@ -55,6 +55,10 @@ public class ApplicationController {
                 application.getApplicationType().equals("个人退宿")){
             //退宿或校外住宿时，目标床位即为当前用户所在床位
             targetbed = bedService.getById(bedService.getByUserId(user.getUserId()));
+            if (targetbed == null) {
+                return JsonResponse.failure("您尚未申请过床位，请先申请");
+            }
+            application.setTargetBed(targetbed.getBedId());
         }else {
             //其余情况为校内住宿或学生互换，目标床位即为申请时选择的床位
             targetbed = bedService.getById(application.getTargetBed());
@@ -216,8 +220,7 @@ public class ApplicationController {
             }
             case "个人退宿", "校外住宿" -> {
                 Bed currentBed = bedService.getByUserId(application.getApplierId());
-                currentBed.setUserId(null);
-                bedService.updateById(currentBed);
+                bedService.clearUser(currentBed);
             }
         }
 
