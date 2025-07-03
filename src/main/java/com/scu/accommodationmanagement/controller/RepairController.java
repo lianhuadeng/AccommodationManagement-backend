@@ -74,7 +74,7 @@ public class RepairController {
         repairService.updateById(repair);
         return JsonResponse.successMessage("取消成功");
     }
-    //TODO:待测试
+
     @PostMapping("/update")
     public JsonResponse update(@RequestBody Repair repair) {
         Repair oldRepair = repairService.getById(repair.getRepairId());
@@ -89,7 +89,6 @@ public class RepairController {
     }
 
     // 学生查看自己的申请
-    //TODO:待测试
     @GetMapping("/userRepairs")
     public JsonResponse userRepairs(@RequestParam String status) {
         User user = CurrentUserUtil.getCurrentUser();
@@ -100,7 +99,6 @@ public class RepairController {
     }
 
     // 维修管理员查看需要自己处理的申请
-    //TODO:待测试
     @GetMapping("/maintenanceAdminRepairs")
     public JsonResponse maintenanceAdminRepairs(@RequestParam String status) {
         User user = CurrentUserUtil.getCurrentUser();
@@ -110,7 +108,6 @@ public class RepairController {
         return JsonResponse.success(repairService.maintenanceAdminRepairs(user.getUserId(), status));
     }
 
-    //TODO:待测试
     @PostMapping("/dormitoryAdminRepairs")
     public JsonResponse dormitoryAdminRepairs(@RequestParam String status) {
         User user = CurrentUserUtil.getCurrentUser();

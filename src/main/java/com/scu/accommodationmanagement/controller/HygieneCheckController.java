@@ -40,15 +40,7 @@ public class HygieneCheckController {
         return JsonResponse.successMessage("添加成功");
     }
 
-    //查看房间卫生检查统计
-    //TODO: 待实现
-//    @GetMapping("/statics")
-//    public JsonResponse getStatics(){
-//
-//    }
-
     //查看卫生检查结果
-    //TODO: 待测试
     @GetMapping("/pageList")
     public JsonResponse<PageDTO<HygieneCheck>> getPageList(
             Integer pageNum,

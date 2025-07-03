@@ -293,7 +293,7 @@ public class UserController {
         List<User> users = userService.list(new QueryWrapper<User>().eq("type", "维修管理员"));
         return JsonResponse.success(users);
     }
-    //TODO: 待测试
+
     @GetMapping("/dormitoryList")
     public JsonResponse getDormitoryList(){
         User currentUser = getCurrentUser();
@@ -303,7 +303,7 @@ public class UserController {
         List<User> users = userService.list(new QueryWrapper<User>().eq("type", "宿舍管理员"));
         return JsonResponse.success(users);
     }
-    //TODO: 待测试
+
     @GetMapping("/leaderList")
     public JsonResponse getLeaderList(){
         User currentUser = getCurrentUser();

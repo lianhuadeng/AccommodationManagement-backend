@@ -139,7 +139,6 @@ public class ApplicationController {
         return JsonResponse.success(applicationService.pageList(studentId, applicationType, status, startTime, endTime, pageNum, pageSize));
     }
 
-    //TODO:待测试
     @GetMapping("/userApplications")
     public JsonResponse userApplications(@RequestParam String status) {
         User user = CurrentUserUtil.getCurrentUser();
