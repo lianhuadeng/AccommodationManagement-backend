@@ -157,7 +157,12 @@ public class UserController {
     public JsonResponse getUserInfo() {
         User user = getCurrentUser();
         if (user != null) {
-            String location = bedService.getLocationByUserId(user.getUserId());
+            String location;
+            if (bedService.getLocationByUserId(user.getUserId()) != null){
+                location = bedService.getLocationByUserId(user.getUserId());
+            }else {
+                location = "暂无";
+            }
             if (bedService.getByUserId(user.getUserId()) == null){
                 UserInfoDTO userInfoDTO = new UserInfoDTO(
                         user.getName(),

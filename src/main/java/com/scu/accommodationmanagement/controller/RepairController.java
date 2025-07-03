@@ -43,13 +43,16 @@ public class RepairController {
     @Autowired
     private FileService fileService;
 
-    //TODO:待测试
     @PostMapping("/add")
     public JsonResponse add(@RequestBody Repair repair) {
         User user = CurrentUserUtil.getCurrentUser();
         // 给location添加默认值，默认为自己所在床位
-        if (repair.getLocation() == null || repair.getLocation().trim().equals("")) {
-            repair.setLocation(bedService.getLocationByUserId(user.getUserId()));
+        if (repair.getLocation() == null || repair.getLocation().trim().isBlank()) {
+            String locationByUserId = bedService.getLocationByUserId(user.getUserId());
+            if (locationByUserId == null) {
+                return JsonResponse.failure("请输入具体维修地点");
+            }
+            repair.setLocation(locationByUserId);
         }
         repair.setStudentId(CurrentUserUtil.getCurrentUser().getUserId());
         repair.setDormitoryId(userService.getDormitoryAdminIdByUserId(CurrentUserUtil.getCurrentUser().getUserId()));
@@ -57,7 +60,7 @@ public class RepairController {
         repairService.save(repair);
         return JsonResponse.successMessage("申请成功");
     }
-    //TODO:待测试
+
     @PostMapping("/cancel")
     public JsonResponse cancel(@RequestParam Long repairId) {
         Repair repair = repairService.getById(repairId);
