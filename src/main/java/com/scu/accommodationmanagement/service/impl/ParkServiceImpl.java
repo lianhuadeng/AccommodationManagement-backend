@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -41,7 +42,11 @@ public class ParkServiceImpl extends ServiceImpl<ParkMapper, Park> implements IP
     @Autowired
     private BedMapper bedMapper;
 
-    //TODO: 用线程优化
+    // 创建固定大小线程池
+    private static final ExecutorService threadPool = Executors.newFixedThreadPool(
+            Runtime.getRuntime().availableProcessors() * 64
+    );
+
     @Override
     public void add(String name, String type,
                     Integer buildingNum, Integer floorNum,
@@ -51,68 +56,80 @@ public class ParkServiceImpl extends ServiceImpl<ParkMapper, Park> implements IP
         Park park = new Park();
         park.setName(name);
         park.setType(type);
-        park.setBuildingNum(0); // 初始化为0，后面会更新
+        park.setBuildingNum(0);
         parkMapper.insert(park);
         long parkId = park.getParkId();
-
-        // 2. 检查参数是否完整
-        if (buildingNum == null || floorNum == null ||
-                roomNumPerFloor == null || bedNumPerRoom == null) {
-            return; // 参数不全时，只添加park
-        }
-
-
-        // 2. 更新park表的building_num字段
-        park.setBuildingNum(buildingNum);
-        parkMapper.updateById(park);
-
         String parkIdStr = String.format("%02d", parkId);
 
-        // 3. 生成Building、Room和Bed
+        // 2. 参数不全时提前返回
+        if (buildingNum == null || floorNum == null ||
+                roomNumPerFloor == null || bedNumPerRoom == null) {
+            return;
+        }
+
+        // 3. 并行创建楼栋
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
         for (int bIdx = 1; bIdx <= buildingNum; bIdx++) {
-            // 创建Building记录
-            String buildIdxStr = String.format("%02d", bIdx);
-            long buildingId = Long.parseLong(parkIdStr + buildIdxStr);
+            final int buildingIndex = bIdx;
+            futures.add(
+                    CompletableFuture.runAsync(() ->
+                                    generateBuilding(
+                                            parkId, parkIdStr, buildingIndex,
+                                            floorNum, roomNumPerFloor, bedNumPerRoom
+                                    ),
+                            threadPool
+                    )
+            );
+        }
 
-            Building building = new Building();
-            building.setBuildingId(buildingId);
-            building.setParkId(parkId);
-            building.setDormitoryId(null);
-            building.setFloorNum(floorNum);
-            building.setRoomNum(roomNumPerFloor);
-            buildingMapper.insert(building);
+        // 4. 等待所有楼栋创建完成
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
 
-            // 生成房间
-            for (int f = 1; f <= floorNum; f++) {
-                String floorStr = String.format("%02d", f);
+        // 5. 更新park的实际楼栋数
+        park.setBuildingNum(buildingNum);
+        parkMapper.updateById(park);
+    }
 
-                for (int r = 1; r <= roomNumPerFloor; r++) {
-                    // 创建Room记录
-                    String roomIdxStr = String.format("%02d", r);
-                    long roomId = Long.parseLong(parkIdStr + buildIdxStr + floorStr + roomIdxStr);
+    // 生成单个楼栋（包含楼层/房间/床位）
+    @Transactional(propagation = Propagation.REQUIRES_NEW) // 独立事务
+    public void generateBuilding(long parkId, String parkIdStr, int bIdx,
+                                 int floorNum, int roomNumPerFloor, int bedNumPerRoom) {
+        // 楼栋ID生成
+        String buildIdxStr = String.format("%02d", bIdx);
+        long buildingId = Long.parseLong(parkIdStr + buildIdxStr);
 
-                    Room room = new Room();
-                    room.setRoomId(roomId);
-                    room.setBuildingId(buildingId);
-                    room.setFloor(f); // 设置楼层
-                    room.setBedNum(bedNumPerRoom);
-                    roomMapper.insert(room);
+        // 插入楼栋记录
+        Building building = new Building();
+        building.setBuildingId(buildingId);
+        building.setParkId(parkId);
+        building.setFloorNum(floorNum);
+        building.setRoomNum(roomNumPerFloor);
+        buildingMapper.insert(building);
 
-                    // 生成床位
-                    for (int bed = 1; bed <= bedNumPerRoom; bed++) {
-                        // 创建Bed记录
-                        String bedIdxStr = String.format("%02d", bed);
-                        long bedId = Long.parseLong(parkIdStr + buildIdxStr + floorStr + roomIdxStr + bedIdxStr);
+        // 生成房间和床位（同步操作）
+        for (int f = 1; f <= floorNum; f++) {
+            String floorStr = String.format("%02d", f);
+            for (int r = 1; r <= roomNumPerFloor; r++) {
+                // 插入房间记录
+                String roomIdxStr = String.format("%02d", r);
+                long roomId = Long.parseLong(parkIdStr + buildIdxStr + floorStr + roomIdxStr);
+                Room room = new Room();
+                room.setRoomId(roomId);
+                room.setBuildingId(buildingId);
+                room.setFloor(f);
+                room.setBedNum(bedNumPerRoom);
+                roomMapper.insert(room);
 
-                        Bed bedEntity = new Bed();
-                        bedEntity.setBedId(bedId);
-                        bedEntity.setRoomId(roomId);
-                        bedEntity.setUserId(null);
-                        bedMapper.insert(bedEntity);
-                    }
+                // 插入床位记录
+                for (int bed = 1; bed <= bedNumPerRoom; bed++) {
+                    String bedIdxStr = String.format("%02d", bed);
+                    long bedId = Long.parseLong(parkIdStr + buildIdxStr + floorStr + roomIdxStr + bedIdxStr);
+                    Bed bedEntity = new Bed();
+                    bedEntity.setBedId(bedId);
+                    bedEntity.setRoomId(roomId);
+                    bedMapper.insert(bedEntity);
                 }
             }
         }
     }
-
 }
