@@ -2,9 +2,9 @@ package com.scu.accommodationmanagement.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.scu.accommodationmanagement.model.dto.LocationDTO;
+import com.scu.accommodationmanagement.model.vo.LocationVO;
 import com.scu.accommodationmanagement.model.dto.PageDTO;
-import com.scu.accommodationmanagement.model.dto.UserInfoDTO;
+import com.scu.accommodationmanagement.model.vo.UserInfoVO;
 import com.scu.accommodationmanagement.model.po.Building;
 import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.model.vo.ChangePasswordVO;
@@ -164,22 +164,22 @@ public class UserController {
                 location = "暂无";
             }
             if (bedService.getByUserId(user.getUserId()) == null){
-                UserInfoDTO userInfoDTO = new UserInfoDTO(
+                UserInfoVO userInfoVO = new UserInfoVO(
                         user.getName(),
                         user.getUserId(),
                         user.getContact(),
                         location
                 );
-                return JsonResponse.success(userInfoDTO);
+                return JsonResponse.success(userInfoVO);
             }
-            UserInfoDTO userInfoDTO = new UserInfoDTO(
+            UserInfoVO userInfoVO = new UserInfoVO(
                     user.getName(),
                     user.getUserId(),
                     user.getContact(),
                     location,
                     bedService.getByUserId(user.getUserId()).getRoomId()
             );
-            return JsonResponse.success(userInfoDTO);
+            return JsonResponse.success(userInfoVO);
         }else {
             return JsonResponse.failure("error");
         }
@@ -325,7 +325,7 @@ public class UserController {
     @GetMapping("/getLocationByUserId")
     public JsonResponse getLocationByUserId(@RequestParam Long userId){
         userService.getById(userId);
-        LocationDTO location = bedService.getLocationByUserIdForApplication(userId);
+        LocationVO location = bedService.getLocationByUserIdForApplication(userId);
         return JsonResponse.success(location);
     }
 

@@ -2,13 +2,10 @@ package com.scu.accommodationmanagement.mapper;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.scu.accommodationmanagement.model.dto.BedListDTO;
-import com.scu.accommodationmanagement.model.dto.LocationDTO;
+import com.scu.accommodationmanagement.model.vo.BedListVO;
+import com.scu.accommodationmanagement.model.vo.LocationVO;
 import com.scu.accommodationmanagement.model.po.Bed;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * <p>
@@ -27,9 +24,9 @@ public interface BedMapper extends BaseMapper<Bed> {
     String getLocationByBedId(Long targetBed);
 
 
-    IPage<BedListDTO> pageList(Page<BedListDTO> page, Long parkId, Long buildingId, Long floor, Long roomId);
+    IPage<BedListVO> pageList(Page<BedListVO> page, Long parkId, Long buildingId, Long floor, Long roomId);
 
-    LocationDTO getLocationByUserIdForApplication(Long userId);
+    LocationVO getLocationByUserIdForApplication(Long userId);
 
     Long getDormitoryAdminIdByBedId(Long bedId);
 

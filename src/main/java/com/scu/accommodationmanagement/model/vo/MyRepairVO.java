@@ -1,9 +1,9 @@
-package com.scu.accommodationmanagement.model.dto;
+package com.scu.accommodationmanagement.model.vo;
 
 import lombok.Data;
 
 @Data
-public class MyRepairDTO {
+public class MyRepairVO {
     private Long repairId;
     private String applierName;
     private String maintainerName;

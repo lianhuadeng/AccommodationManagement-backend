@@ -1,10 +1,10 @@
-package com.scu.accommodationmanagement.model.dto;
+package com.scu.accommodationmanagement.model.vo;
 
 
 import lombok.Data;
 
 @Data
-public class BedListDTO {
+public class BedListVO {
     private Long parkId;
     private String parkName;
     private Long buildingId;

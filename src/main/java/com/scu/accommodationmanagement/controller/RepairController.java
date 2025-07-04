@@ -1,7 +1,7 @@
 package com.scu.accommodationmanagement.controller;
 
 
-import com.scu.accommodationmanagement.model.dto.MyRepairDTO;
+import com.scu.accommodationmanagement.model.vo.MyRepairVO;
 import com.scu.accommodationmanagement.model.po.Repair;
 import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.model.vo.AllocateRepairVO;
@@ -168,21 +168,21 @@ public class RepairController {
     public JsonResponse myRepair() {
         User user = CurrentUserUtil.getCurrentUser();
         List<Repair> repairs = repairService.getByStudentId(user.getUserId());
-        List<MyRepairDTO> myRepairDTOList = new ArrayList<>();
+        List<MyRepairVO> myRepairVOList = new ArrayList<>();
         for (Repair repair : repairs) {
-            MyRepairDTO myRepairDTO = new MyRepairDTO();
-            myRepairDTO.setRepairId(repair.getRepairId());
-            myRepairDTO.setRepairItem(repair.getRepairItem());
-            myRepairDTO.setContent(repair.getContent());
-            myRepairDTO.setApplyTime(DateTimeConverterUtil.convertToChineseDateTime(repair.getApplyTime()));
-            myRepairDTO.setStatus(repair.getStatus());
-            myRepairDTO.setLocation(repair.getLocation());
-            myRepairDTO.setPictureUrl(repair.getPictureUrl());
+            MyRepairVO myRepairVO = new MyRepairVO();
+            myRepairVO.setRepairId(repair.getRepairId());
+            myRepairVO.setRepairItem(repair.getRepairItem());
+            myRepairVO.setContent(repair.getContent());
+            myRepairVO.setApplyTime(DateTimeConverterUtil.convertToChineseDateTime(repair.getApplyTime()));
+            myRepairVO.setStatus(repair.getStatus());
+            myRepairVO.setLocation(repair.getLocation());
+            myRepairVO.setPictureUrl(repair.getPictureUrl());
             if (!repair.getStatus().equals("待分配"))
-                myRepairDTO.setMaintainerName(userService.getById(repair.getMaintenanceId()).getName());
-            myRepairDTOList.add(myRepairDTO);
+                myRepairVO.setMaintainerName(userService.getById(repair.getMaintenanceId()).getName());
+            myRepairVOList.add(myRepairVO);
         }
-        return JsonResponse.success(myRepairDTOList);
+        return JsonResponse.success(myRepairVOList);
     }
 
     @GetMapping("/getAllocatedRepair")
@@ -192,21 +192,21 @@ public class RepairController {
             return JsonResponse.failure("无权限查看已处理申请！");
         }
         List<Repair> repairs = repairService.getByDormitoryId(user.getUserId());
-        List<MyRepairDTO> myRepairDTOList = new ArrayList<>();
+        List<MyRepairVO> myRepairVOList = new ArrayList<>();
         for (Repair repair : repairs) {
-            MyRepairDTO myRepairDTO = new MyRepairDTO();
-            myRepairDTO.setRepairId(repair.getRepairId());
-            myRepairDTO.setRepairItem(repair.getRepairItem());
-            myRepairDTO.setContent(repair.getContent());
-            myRepairDTO.setApplyTime(DateTimeConverterUtil.convertToChineseDateTime(repair.getApplyTime()));
-            myRepairDTO.setStatus(repair.getStatus());
-            myRepairDTO.setLocation(repair.getLocation());
-            myRepairDTO.setPictureUrl(repair.getPictureUrl());
+            MyRepairVO myRepairVO = new MyRepairVO();
+            myRepairVO.setRepairId(repair.getRepairId());
+            myRepairVO.setRepairItem(repair.getRepairItem());
+            myRepairVO.setContent(repair.getContent());
+            myRepairVO.setApplyTime(DateTimeConverterUtil.convertToChineseDateTime(repair.getApplyTime()));
+            myRepairVO.setStatus(repair.getStatus());
+            myRepairVO.setLocation(repair.getLocation());
+            myRepairVO.setPictureUrl(repair.getPictureUrl());
             if (!repair.getStatus().equals("待分配"))
-                myRepairDTO.setMaintainerName(userService.getById(repair.getMaintenanceId()).getName());
-            myRepairDTOList.add(myRepairDTO);
+                myRepairVO.setMaintainerName(userService.getById(repair.getMaintenanceId()).getName());
+            myRepairVOList.add(myRepairVO);
         }
-        return JsonResponse.success(myRepairDTOList);
+        return JsonResponse.success(myRepairVOList);
     }
 
     @GetMapping("/getProcessedRepair")
@@ -216,21 +216,21 @@ public class RepairController {
             return JsonResponse.failure("无权限查看已处理申请！");
         }
         List<Repair> repairs = repairService.getByMaintenanceId(user.getUserId());
-        List<MyRepairDTO> myRepairDTOList = new ArrayList<>();
+        List<MyRepairVO> myRepairVOList = new ArrayList<>();
         for (Repair repair : repairs) {
-            MyRepairDTO myRepairDTO = new MyRepairDTO();
-            myRepairDTO.setRepairId(repair.getRepairId());
-            myRepairDTO.setRepairItem(repair.getRepairItem());
-            myRepairDTO.setContent(repair.getContent());
-            myRepairDTO.setApplyTime(DateTimeConverterUtil.convertToChineseDateTime(repair.getApplyTime()));
-            myRepairDTO.setStatus(repair.getStatus());
-            myRepairDTO.setLocation(repair.getLocation());
-            myRepairDTO.setDormitoryName(userService.getById(repair.getDormitoryId()).getName());
-            myRepairDTO.setPictureUrl(repair.getPictureUrl());
-            myRepairDTO.setMaintainerName(userService.getById(repair.getStudentId()).getName());
-            myRepairDTOList.add(myRepairDTO);
+            MyRepairVO myRepairVO = new MyRepairVO();
+            myRepairVO.setRepairId(repair.getRepairId());
+            myRepairVO.setRepairItem(repair.getRepairItem());
+            myRepairVO.setContent(repair.getContent());
+            myRepairVO.setApplyTime(DateTimeConverterUtil.convertToChineseDateTime(repair.getApplyTime()));
+            myRepairVO.setStatus(repair.getStatus());
+            myRepairVO.setLocation(repair.getLocation());
+            myRepairVO.setDormitoryName(userService.getById(repair.getDormitoryId()).getName());
+            myRepairVO.setPictureUrl(repair.getPictureUrl());
+            myRepairVO.setMaintainerName(userService.getById(repair.getStudentId()).getName());
+            myRepairVOList.add(myRepairVO);
         }
-        return JsonResponse.success(myRepairDTOList);
+        return JsonResponse.success(myRepairVOList);
     }
 
     @GetMapping("/toBeAllocatedRepair")
@@ -240,19 +240,19 @@ public class RepairController {
             return JsonResponse.failure("无权限查看待分配申请！");
         }
         List<Repair> repairs = repairService.toBeAllocatedRepair(user.getUserId());
-        List<MyRepairDTO> myRepairDTOList = new ArrayList<>();
+        List<MyRepairVO> myRepairVOList = new ArrayList<>();
         for (Repair repair : repairs) {
-            MyRepairDTO myRepairDTO = new MyRepairDTO();
-            myRepairDTO.setRepairId(repair.getRepairId());
-            myRepairDTO.setRepairItem(repair.getRepairItem());
-            myRepairDTO.setContent(repair.getContent());
-            myRepairDTO.setApplyTime(DateTimeConverterUtil.convertToChineseDateTime(repair.getApplyTime()));
-            myRepairDTO.setStatus(repair.getStatus());
-            myRepairDTO.setLocation(repair.getLocation());
-            myRepairDTO.setPictureUrl(repair.getPictureUrl());
-            myRepairDTO.setApplierName(userService.getById(repair.getStudentId()).getName());
-            myRepairDTOList.add(myRepairDTO);
+            MyRepairVO myRepairVO = new MyRepairVO();
+            myRepairVO.setRepairId(repair.getRepairId());
+            myRepairVO.setRepairItem(repair.getRepairItem());
+            myRepairVO.setContent(repair.getContent());
+            myRepairVO.setApplyTime(DateTimeConverterUtil.convertToChineseDateTime(repair.getApplyTime()));
+            myRepairVO.setStatus(repair.getStatus());
+            myRepairVO.setLocation(repair.getLocation());
+            myRepairVO.setPictureUrl(repair.getPictureUrl());
+            myRepairVO.setApplierName(userService.getById(repair.getStudentId()).getName());
+            myRepairVOList.add(myRepairVO);
         }
-        return JsonResponse.success(myRepairDTOList);
+        return JsonResponse.success(myRepairVOList);
     }
 }

@@ -1,7 +1,6 @@
 package com.scu.accommodationmanagement.controller;
 
-
-import com.scu.accommodationmanagement.model.dto.MyApplicationDTO;
+import com.scu.accommodationmanagement.model.vo.MyApplicationVO;
 import com.scu.accommodationmanagement.model.dto.PageDTO;
 import com.scu.accommodationmanagement.model.po.Application;
 import com.scu.accommodationmanagement.model.po.Bed;
@@ -14,12 +13,10 @@ import com.scu.accommodationmanagement.utils.CurrentUserUtil;
 import com.scu.accommodationmanagement.utils.DateTimeConverterUtil;
 import com.scu.accommodationmanagement.utils.JsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -233,7 +230,7 @@ public class ApplicationController {
     public JsonResponse myApplication() {
         User user = CurrentUserUtil.getCurrentUser();
         List<Application> apps = applicationService.getByApplierId(user.getUserId());
-        return JsonResponse.success(convertToDTO(apps));
+        return JsonResponse.success(convertToVO(apps));
     }
 
     @GetMapping("/processedApplication")
@@ -243,7 +240,7 @@ public class ApplicationController {
             return JsonResponse.failure("无权限查看已处理申请！");
         }
         List<Application> apps = applicationService.getByDormitoryId(user.getUserId());
-        return JsonResponse.success(convertToDTO(apps));
+        return JsonResponse.success(convertToVO(apps));
     }
 
     @GetMapping("/reviewedApplication")
@@ -253,7 +250,7 @@ public class ApplicationController {
             return JsonResponse.failure("无权限查看已审核申请！");
         }
         List<Application> apps = applicationService.getByLeaderId(user.getUserId());
-        return JsonResponse.success(convertToDTO(apps));
+        return JsonResponse.success(convertToVO(apps));
     }
 
     @GetMapping("/toBeReviewedApplication")
@@ -263,8 +260,8 @@ public class ApplicationController {
             return JsonResponse.failure("无权限查看待审核申请！");
         }
         List<Application> apps = applicationService.getToBeReviewedApplication(user.getUserId());
-        List<MyApplicationDTO> myApplicationDTOS = convertToDTO(apps);
-        return JsonResponse.success(myApplicationDTOS);
+        List<MyApplicationVO> myApplicationVOS = convertToVO(apps);
+        return JsonResponse.success(myApplicationVOS);
     }
 
     @GetMapping("/toBeProcessedApplication")
@@ -274,33 +271,33 @@ public class ApplicationController {
             return JsonResponse.failure("无权限查看待处理申请！");
         }
         List<Application> apps = applicationService.getToBeProcessedApplication(user.getUserId());
-        return JsonResponse.success(convertToDTO(apps));
+        return JsonResponse.success(convertToVO(apps));
     }
 
-    private List<MyApplicationDTO> convertToDTO(List<Application> applications) {
-        List<MyApplicationDTO> dtos = new ArrayList<>();
+    private List<MyApplicationVO> convertToVO(List<Application> applications) {
+        List<MyApplicationVO> vos = new ArrayList<>();
         for (Application app : applications) {
             if (app.getIsDeleted()) continue;
-            MyApplicationDTO dto = new MyApplicationDTO();
-            dto.setApplicationId(app.getApplicationId());
-            dto.setApplicationType(app.getApplicationType());
-            dto.setApplicationTime(DateTimeConverterUtil.convertToChineseDateTime(app.getApplicationTime()));
-            dto.setStatus(app.getStatus());
-            dto.setRemark(app.getRemark());
-            dto.setOpinion(app.getOpinion());
-            dto.setApplierId(app.getApplierId());
-            dto.setApplierName(userService.getById(app.getApplierId()).getName());
-            dto.setDormitoryAdminName(userService.getById(app.getDormitoryId()).getName());
+            MyApplicationVO vo = new MyApplicationVO();
+            vo.setApplicationId(app.getApplicationId());
+            vo.setApplicationType(app.getApplicationType());
+            vo.setApplicationTime(DateTimeConverterUtil.convertToChineseDateTime(app.getApplicationTime()));
+            vo.setStatus(app.getStatus());
+            vo.setRemark(app.getRemark());
+            vo.setOpinion(app.getOpinion());
+            vo.setApplierId(app.getApplierId());
+            vo.setApplierName(userService.getById(app.getApplierId()).getName());
+            vo.setDormitoryAdminName(userService.getById(app.getDormitoryId()).getName());
             if (app.getLeaderId() != null) {
-                dto.setLeaderName(userService.getById(app.getLeaderId()).getName());
+                vo.setLeaderName(userService.getById(app.getLeaderId()).getName());
             }
             if (!"校外住宿".equals(app.getApplicationType())) {
-                dto.setTargetLocation(bedService.getLocationByBedId(app.getTargetBed()));
+                vo.setTargetLocation(bedService.getLocationByBedId(app.getTargetBed()));
             } else {
-                dto.setTargetLocation(app.getNewAddress());
+                vo.setTargetLocation(app.getNewAddress());
             }
-            dtos.add(dto);
+            vos.add(vo);
         }
-        return dtos;
+        return vos;
     }
 }

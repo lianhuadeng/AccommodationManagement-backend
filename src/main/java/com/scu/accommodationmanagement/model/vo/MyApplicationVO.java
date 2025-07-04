@@ -1,9 +1,9 @@
-package com.scu.accommodationmanagement.model.dto;
+package com.scu.accommodationmanagement.model.vo;
 
 import lombok.Data;
 
 @Data
-public class MyApplicationDTO {
+public class MyApplicationVO {
     private Long applicationId;
     private String applicationType;
     private Long applierId;

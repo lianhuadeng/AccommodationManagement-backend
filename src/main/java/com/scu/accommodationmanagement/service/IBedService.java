@@ -1,7 +1,7 @@
 package com.scu.accommodationmanagement.service;
 
-import com.scu.accommodationmanagement.model.dto.BedListDTO;
-import com.scu.accommodationmanagement.model.dto.LocationDTO;
+import com.scu.accommodationmanagement.model.vo.BedListVO;
+import com.scu.accommodationmanagement.model.vo.LocationVO;
 import com.scu.accommodationmanagement.model.dto.PageDTO;
 import com.scu.accommodationmanagement.model.po.Bed;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -30,9 +30,9 @@ public interface IBedService extends IService<Bed> {
     String getLocationByBedId(Long targetBed);
 
 
-    PageDTO<BedListDTO> pageList(Integer pageNum, Integer pageSize, Long parkId, Long buildingId, Long floor, Long roomId);
+    PageDTO<BedListVO> pageList(Integer pageNum, Integer pageSize, Long parkId, Long buildingId, Long floor, Long roomId);
 
-    LocationDTO getLocationByUserIdForApplication(Long userId);
+    LocationVO getLocationByUserIdForApplication(Long userId);
 
     Long getDormitoryAdminIdByBedId(Long bedId);
 

@@ -1,10 +1,8 @@
 package com.scu.accommodationmanagement.controller;
 
 
-import com.scu.accommodationmanagement.model.dto.BedListDTO;
+import com.scu.accommodationmanagement.model.vo.BedListVO;
 import com.scu.accommodationmanagement.model.dto.PageDTO;
-import com.scu.accommodationmanagement.model.po.Application;
-import com.scu.accommodationmanagement.model.po.Bed;
 import com.scu.accommodationmanagement.model.po.Building;
 import com.scu.accommodationmanagement.model.po.User;
 import com.scu.accommodationmanagement.service.*;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -86,7 +83,7 @@ public class BedController {
     }
 
     @GetMapping("/pageList")
-    public JsonResponse<PageDTO<BedListDTO>> pageList(
+    public JsonResponse<PageDTO<BedListVO>> pageList(
             Integer pageNum,
             Integer pageSize,
             @RequestParam(required = false) Long parkId,
@@ -94,8 +91,8 @@ public class BedController {
             @RequestParam(required = false) Long floor,
             @RequestParam(required = false) Long roomId
     ) {
-        PageDTO<BedListDTO> bedListDTOPageDTO = bedService.pageList(pageNum, pageSize, parkId, buildingId, floor, roomId);
-        for (BedListDTO bed : bedListDTOPageDTO.getItems()){
+        PageDTO<BedListVO> bedListDTOPageDTO = bedService.pageList(pageNum, pageSize, parkId, buildingId, floor, roomId);
+        for (BedListVO bed : bedListDTOPageDTO.getItems()){
             bed.setParkName(parkService.getById(bed.getParkId()).getName());
             if (bed.getUserId() != null){
                 bed.setUserName(userService.getById(bed.getUserId()).getName());
